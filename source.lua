@@ -1,22 +1,23 @@
--- ROX ADMIN v2.0
-print("Loading Rox Admin...")
+-- ROX ADMIN v3.0 - COMPLETE VERSION
+-- 50+ Commands with Buttons
 
 local Players = game:GetService("Players")
-local UserInputService = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
 local LocalPlayer = Players.LocalPlayer
 
-wait(0.5)
-
+-- Notification
 game.StarterGui:SetCore("SendNotification", {
-    Title = "Rox Admin";
-    Text = "Willkommen " .. LocalPlayer.Name;
+    Title = "✅ Rox Admin";
+    Text = "Erfolgreich geladen!";
     Duration = 3;
 })
 
+-- ScreenGui Setup
 local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Name = "RoxAdmin"
+ScreenGui.Name = "RoxAdminV3"
 ScreenGui.ResetOnSpawn = false
+ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
 pcall(function()
     ScreenGui.Parent = game.CoreGui
@@ -26,62 +27,72 @@ if ScreenGui.Parent ~= game.CoreGui then
     ScreenGui.Parent = LocalPlayer.PlayerGui
 end
 
--- RUNDER BUTTON
-local ToggleButton = Instance.new("TextButton")
-ToggleButton.Size = UDim2.new(0, 70, 0, 70)
-ToggleButton.Position = UDim2.new(0, 10, 0.5, -35)
-ToggleButton.BackgroundColor3 = Color3.fromRGB(60, 60, 220)
-ToggleButton.Text = "ROX"
-ToggleButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-ToggleButton.TextSize = 18
-ToggleButton.Font = Enum.Font.GothamBold
-ToggleButton.BorderSizePixel = 0
-ToggleButton.Active = true
-ToggleButton.Draggable = true
-ToggleButton.Parent = ScreenGui
+-- ==========================================
+-- RUNDER TOGGLE BUTTON (LINKS MITTIG)
+-- ==========================================
 
-local ButtonCorner = Instance.new("UICorner")
-ButtonCorner.CornerRadius = UDim.new(1, 0)
-ButtonCorner.Parent = ToggleButton
+local ToggleBtn = Instance.new("TextButton")
+ToggleBtn.Size = UDim2.new(0, 65, 0, 65)
+ToggleBtn.Position = UDim2.new(0, 15, 0.5, -32)
+ToggleBtn.BackgroundColor3 = Color3.fromRGB(80, 80, 255)
+ToggleBtn.Text = "R"
+ToggleBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+ToggleBtn.TextSize = 28
+ToggleBtn.Font = Enum.Font.GothamBold
+ToggleBtn.BorderSizePixel = 0
+ToggleBtn.Active = true
+ToggleBtn.Draggable = true
+ToggleBtn.Parent = ScreenGui
 
-local ButtonStroke = Instance.new("UIStroke")
-ButtonStroke.Color = Color3.fromRGB(255, 255, 255)
-ButtonStroke.Thickness = 3
-ButtonStroke.Parent = ToggleButton
+local BtnCorner = Instance.new("UICorner")
+BtnCorner.CornerRadius = UDim.new(1, 0)
+BtnCorner.Parent = ToggleBtn
 
--- MAIN FRAME
-local MainFrame = Instance.new("Frame")
-MainFrame.Size = UDim2.new(0, 600, 0, 450)
-MainFrame.Position = UDim2.new(0.5, -300, 0.5, -225)
-MainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-MainFrame.BorderSizePixel = 0
-MainFrame.Visible = false
-MainFrame.Parent = ScreenGui
+local BtnStroke = Instance.new("UIStroke")
+BtnStroke.Color = Color3.fromRGB(255, 255, 255)
+BtnStroke.Thickness = 3
+BtnStroke.Parent = ToggleBtn
+
+-- ==========================================
+-- HAUPT GUI FRAME
+-- ==========================================
+
+local Main = Instance.new("Frame")
+Main.Size = UDim2.new(0, 700, 0, 500)
+Main.Position = UDim2.new(0.5, -350, 0.5, -250)
+Main.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+Main.BorderSizePixel = 0
+Main.Visible = false
+Main.Active = true
+Main.Parent = ScreenGui
 
 local MainCorner = Instance.new("UICorner")
-MainCorner.CornerRadius = UDim.new(0, 10)
-MainCorner.Parent = MainFrame
+MainCorner.CornerRadius = UDim.new(0, 12)
+MainCorner.Parent = Main
 
 local MainStroke = Instance.new("UIStroke")
 MainStroke.Color = Color3.fromRGB(80, 80, 80)
 MainStroke.Thickness = 2
-MainStroke.Parent = MainFrame
+MainStroke.Parent = Main
 
+-- ==========================================
 -- TITLE BAR
+-- ==========================================
+
 local TitleBar = Instance.new("Frame")
 TitleBar.Size = UDim2.new(1, 0, 0, 50)
-TitleBar.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+TitleBar.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
 TitleBar.BorderSizePixel = 0
-TitleBar.Parent = MainFrame
+TitleBar.Parent = Main
 
 local TitleCorner = Instance.new("UICorner")
-TitleCorner.CornerRadius = UDim.new(0, 10)
+TitleCorner.CornerRadius = UDim.new(0, 12)
 TitleCorner.Parent = TitleBar
 
 local TitleFix = Instance.new("Frame")
-TitleFix.Size = UDim2.new(1, 0, 0, 10)
-TitleFix.Position = UDim2.new(0, 0, 1, -10)
-TitleFix.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+TitleFix.Size = UDim2.new(1, 0, 0, 12)
+TitleFix.Position = UDim2.new(0, 0, 1, -12)
+TitleFix.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
 TitleFix.BorderSizePixel = 0
 TitleFix.Parent = TitleBar
 
@@ -89,20 +100,50 @@ local Title = Instance.new("TextLabel")
 Title.Size = UDim2.new(1, -60, 1, 0)
 Title.Position = UDim2.new(0, 15, 0, 0)
 Title.BackgroundTransparency = 1
-Title.Text = "🔧 ROX ADMIN"
+Title.Text = "🔧 ROX ADMIN V3.0"
 Title.TextColor3 = Color3.fromRGB(255, 255, 255)
 Title.TextSize = 22
 Title.Font = Enum.Font.GothamBold
 Title.TextXAlignment = Enum.TextXAlignment.Left
 Title.Parent = TitleBar
 
+-- Drag functionality
+local dragging, dragInput, dragStart, startPos
+
+TitleBar.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+        dragging = true
+        dragStart = input.Position
+        startPos = Main.Position
+        
+        input.Changed:Connect(function()
+            if input.UserInputState == Enum.UserInputState.End then
+                dragging = false
+            end
+        end)
+    end
+end)
+
+TitleBar.InputChanged:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+        dragInput = input
+    end
+end)
+
+UserInputService.InputChanged:Connect(function(input)
+    if input == dragInput and dragging then
+        local delta = input.Position - dragStart
+        Main.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+    end
+end)
+
 local CloseBtn = Instance.new("TextButton")
 CloseBtn.Size = UDim2.new(0, 40, 0, 40)
 CloseBtn.Position = UDim2.new(1, -45, 0, 5)
-CloseBtn.BackgroundColor3 = Color3.fromRGB(220, 50, 50)
+CloseBtn.BackgroundColor3 = Color3.fromRGB(255, 60, 60)
 CloseBtn.Text = "X"
 CloseBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-CloseBtn.TextSize = 20
+CloseBtn.TextSize = 22
 CloseBtn.Font = Enum.Font.GothamBold
 CloseBtn.BorderSizePixel = 0
 CloseBtn.Parent = TitleBar
@@ -111,218 +152,260 @@ local CloseCorner = Instance.new("UICorner")
 CloseCorner.CornerRadius = UDim.new(1, 0)
 CloseCorner.Parent = CloseBtn
 
--- TABS
-local TabBar = Instance.new("Frame")
-TabBar.Size = UDim2.new(1, -20, 0, 40)
-TabBar.Position = UDim2.new(0, 10, 0, 60)
-TabBar.BackgroundTransparency = 1
-TabBar.Parent = MainFrame
+-- ==========================================
+-- TAB SYSTEM
+-- ==========================================
 
-local HomeTab = Instance.new("TextButton")
-HomeTab.Size = UDim2.new(0.48, 0, 1, 0)
-HomeTab.Position = UDim2.new(0, 0, 0, 0)
-HomeTab.BackgroundColor3 = Color3.fromRGB(60, 120, 220)
-HomeTab.Text = "🏠 Home"
-HomeTab.TextColor3 = Color3.fromRGB(255, 255, 255)
-HomeTab.TextSize = 16
-HomeTab.Font = Enum.Font.GothamBold
-HomeTab.BorderSizePixel = 0
-HomeTab.Parent = TabBar
+local TabContainer = Instance.new("Frame")
+TabContainer.Size = UDim2.new(1, 0, 0, 45)
+TabContainer.Position = UDim2.new(0, 0, 0, 50)
+TabContainer.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+TabContainer.BorderSizePixel = 0
+TabContainer.Parent = Main
 
-local HomeCorner = Instance.new("UICorner")
-HomeCorner.CornerRadius = UDim.new(0, 8)
-HomeCorner.Parent = HomeTab
+local TabList = Instance.new("UIListLayout")
+TabList.FillDirection = Enum.FillDirection.Horizontal
+TabList.SortOrder = Enum.SortOrder.LayoutOrder
+TabList.Padding = UDim.new(0, 2)
+TabList.Parent = TabContainer
 
-local CmdTab = Instance.new("TextButton")
-CmdTab.Size = UDim2.new(0.48, 0, 1, 0)
-CmdTab.Position = UDim2.new(0.52, 0, 0, 0)
-CmdTab.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-CmdTab.Text = "📋 Commands"
-CmdTab.TextColor3 = Color3.fromRGB(200, 200, 200)
-CmdTab.TextSize = 16
-CmdTab.Font = Enum.Font.GothamBold
-CmdTab.BorderSizePixel = 0
-CmdTab.Parent = TabBar
-
-local CmdCorner = Instance.new("UICorner")
-CmdCorner.CornerRadius = UDim.new(0, 8)
-CmdCorner.Parent = CmdTab
-
--- HOME PAGE
-local HomePage = Instance.new("Frame")
-HomePage.Size = UDim2.new(1, -20, 1, -150)
-HomePage.Position = UDim2.new(0, 10, 0, 110)
-HomePage.BackgroundTransparency = 1
-HomePage.Visible = true
-HomePage.Parent = MainFrame
-
-local CmdInput = Instance.new("TextBox")
-CmdInput.Size = UDim2.new(1, 0, 0, 45)
-CmdInput.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
-CmdInput.TextColor3 = Color3.fromRGB(255, 255, 255)
-CmdInput.PlaceholderText = "Befehl eingeben (z.B. speed 100)"
-CmdInput.PlaceholderColor3 = Color3.fromRGB(150, 150, 150)
-CmdInput.Text = ""
-CmdInput.TextSize = 16
-CmdInput.Font = Enum.Font.Gotham
-CmdInput.BorderSizePixel = 0
-CmdInput.ClearTextOnFocus = false
-CmdInput.Parent = HomePage
-
-local InputCorner = Instance.new("UICorner")
-InputCorner.CornerRadius = UDim.new(0, 8)
-InputCorner.Parent = CmdInput
-
-local LogScroll = Instance.new("ScrollingFrame")
-LogScroll.Size = UDim2.new(1, 0, 1, -55)
-LogScroll.Position = UDim2.new(0, 0, 0, 55)
-LogScroll.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
-LogScroll.BorderSizePixel = 0
-LogScroll.ScrollBarThickness = 6
-LogScroll.Parent = HomePage
-
-local LogCorner = Instance.new("UICorner")
-LogCorner.CornerRadius = UDim.new(0, 8)
-LogCorner.Parent = LogScroll
-
-local LogList = Instance.new("UIListLayout")
-LogList.Padding = UDim.new(0, 5)
-LogList.Parent = LogScroll
-
-local LogPadding = Instance.new("UIPadding")
-LogPadding.PaddingTop = UDim.new(0, 10)
-LogPadding.PaddingLeft = UDim.new(0, 10)
-LogPadding.PaddingRight = UDim.new(0, 10)
-LogPadding.Parent = LogScroll
-
--- COMMANDS PAGE
-local CommandsPage = Instance.new("ScrollingFrame")
-CommandsPage.Size = UDim2.new(1, -20, 1, -150)
-CommandsPage.Position = UDim2.new(0, 10, 0, 110)
-CommandsPage.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
-CommandsPage.BorderSizePixel = 0
-CommandsPage.ScrollBarThickness = 6
-CommandsPage.Visible = false
-CommandsPage.Parent = MainFrame
-
-local CmdPageCorner = Instance.new("UICorner")
-CmdPageCorner.CornerRadius = UDim.new(0, 8)
-CmdPageCorner.Parent = CommandsPage
-
-local CmdPageList = Instance.new("UIListLayout")
-CmdPageList.Padding = UDim.new(0, 10)
-CmdPageList.Parent = CommandsPage
-
-local CmdPagePadding = Instance.new("UIPadding")
-CmdPagePadding.PaddingTop = UDim.new(0, 10)
-CmdPagePadding.PaddingLeft = UDim.new(0, 10)
-CmdPagePadding.PaddingRight = UDim.new(0, 10)
-CmdPagePadding.PaddingBottom = UDim.new(0, 10)
-CmdPagePadding.Parent = CommandsPage
-
--- FUNCTIONS
-local function addLog(msg, color)
-    local Label = Instance.new("TextLabel")
-    Label.Size = UDim2.new(1, -10, 0, 25)
-    Label.BackgroundTransparency = 1
-    Label.Text = "• " .. msg
-    Label.TextColor3 = color or Color3.fromRGB(220, 220, 220)
-    Label.TextSize = 15
-    Label.Font = Enum.Font.Gotham
-    Label.TextXAlignment = Enum.TextXAlignment.Left
-    Label.TextWrapped = true
-    Label.Parent = LogScroll
-    
-    LogScroll.CanvasSize = UDim2.new(0, 0, 0, LogList.AbsoluteContentSize.Y + 20)
+local function createTab(name, icon, order)
+    local Tab = Instance.new("TextButton")
+    Tab.Size = UDim2.new(0, 138, 1, 0)
+    Tab.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+    Tab.Text = icon .. " " .. name
+    Tab.TextColor3 = Color3.fromRGB(200, 200, 200)
+    Tab.TextSize = 15
+    Tab.Font = Enum.Font.GothamBold
+    Tab.BorderSizePixel = 0
+    Tab.LayoutOrder = order
+    Tab.Parent = TabContainer
+    return Tab
 end
 
-local function createCmdBox(name, desc, usage)
-    local Box = Instance.new("Frame")
-    Box.Size = UDim2.new(1, -10, 0, 80)
-    Box.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-    Box.BorderSizePixel = 0
-    Box.Parent = CommandsPage
+local PlayerTab = createTab("Player", "👤", 1)
+local VisualTab = createTab("Visual", "👁️", 2)
+local TeleportTab = createTab("Teleport", "📍", 3)
+local MiscTab = createTab("Misc", "⚙️", 4)
+local ScriptsTab = createTab("Scripts", "📜", 5)
+
+-- ==========================================
+-- PAGE CONTAINER
+-- ==========================================
+
+local PageContainer = Instance.new("Frame")
+PageContainer.Size = UDim2.new(1, 0, 1, -95)
+PageContainer.Position = UDim2.new(0, 0, 0, 95)
+PageContainer.BackgroundTransparency = 1
+PageContainer.Parent = Main
+
+local function createPage()
+    local Page = Instance.new("ScrollingFrame")
+    Page.Size = UDim2.new(1, 0, 1, 0)
+    Page.BackgroundTransparency = 1
+    Page.BorderSizePixel = 0
+    Page.ScrollBarThickness = 6
+    Page.ScrollBarImageColor3 = Color3.fromRGB(80, 80, 80)
+    Page.Visible = false
+    Page.Parent = PageContainer
     
-    local BoxCorner = Instance.new("UICorner")
-    BoxCorner.CornerRadius = UDim.new(0, 8)
-    BoxCorner.Parent = Box
+    local Grid = Instance.new("UIGridLayout")
+    Grid.CellSize = UDim2.new(0, 160, 0, 45)
+    Grid.CellPadding = UDim2.new(0, 8, 0, 8)
+    Grid.SortOrder = Enum.SortOrder.LayoutOrder
+    Grid.Parent = Page
     
-    local NameLbl = Instance.new("TextLabel")
-    NameLbl.Size = UDim2.new(1, -20, 0, 22)
-    NameLbl.Position = UDim2.new(0, 10, 0, 8)
-    NameLbl.BackgroundTransparency = 1
-    NameLbl.Text = "📌 " .. name
-    NameLbl.TextColor3 = Color3.fromRGB(100, 200, 255)
-    NameLbl.TextSize = 17
-    NameLbl.Font = Enum.Font.GothamBold
-    NameLbl.TextXAlignment = Enum.TextXAlignment.Left
-    NameLbl.Parent = Box
+    local Padding = Instance.new("UIPadding")
+    Padding.PaddingTop = UDim.new(0, 10)
+    Padding.PaddingLeft = UDim.new(0, 10)
+    Padding.PaddingRight = UDim.new(0, 10)
+    Padding.PaddingBottom = UDim.new(0, 10)
+    Padding.Parent = Page
     
-    local DescLbl = Instance.new("TextLabel")
-    DescLbl.Size = UDim2.new(1, -20, 0, 20)
-    DescLbl.Position = UDim2.new(0, 10, 0, 32)
-    DescLbl.BackgroundTransparency = 1
-    DescLbl.Text = desc
-    DescLbl.TextColor3 = Color3.fromRGB(190, 190, 190)
-    DescLbl.TextSize = 14
-    DescLbl.Font = Enum.Font.Gotham
-    DescLbl.TextXAlignment = Enum.TextXAlignment.Left
-    DescLbl.Parent = Box
-    
-    local UsageLbl = Instance.new("TextLabel")
-    UsageLbl.Size = UDim2.new(1, -20, 0, 20)
-    UsageLbl.Position = UDim2.new(0, 10, 0, 54)
-    UsageLbl.BackgroundTransparency = 1
-    UsageLbl.Text = "💻 Nutzung: " .. usage
-    UsageLbl.TextColor3 = Color3.fromRGB(130, 130, 130)
-    UsageLbl.TextSize = 13
-    UsageLbl.Font = Enum.Font.Gotham
-    UsageLbl.TextXAlignment = Enum.TextXAlignment.Left
-    UsageLbl.Parent = Box
-    
-    CommandsPage.CanvasSize = UDim2.new(0, 0, 0, CmdPageList.AbsoluteContentSize.Y + 20)
+    return Page
 end
 
--- TOGGLE BUTTON
-local isOpen = false
+local PlayerPage = createPage()
+local VisualPage = createPage()
+local TeleportPage = createPage()
+local MiscPage = createPage()
+local ScriptsPage = createPage()
 
-ToggleButton.MouseButton1Click:Connect(function()
-    isOpen = not isOpen
-    MainFrame.Visible = isOpen
+PlayerPage.Visible = true
+
+-- ==========================================
+-- BUTTON CREATOR
+-- ==========================================
+
+local function createButton(parent, text, color)
+    local Btn = Instance.new("TextButton")
+    Btn.Size = UDim2.new(1, 0, 1, 0)
+    Btn.BackgroundColor3 = color or Color3.fromRGB(50, 50, 50)
+    Btn.Text = text
+    Btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    Btn.TextSize = 14
+    Btn.Font = Enum.Font.GothamSemibold
+    Btn.BorderSizePixel = 0
+    Btn.Parent = parent
     
-    if isOpen then
-        ToggleButton.BackgroundColor3 = Color3.fromRGB(100, 220, 100)
-    else
-        ToggleButton.BackgroundColor3 = Color3.fromRGB(60, 60, 220)
+    local Corner = Instance.new("UICorner")
+    Corner.CornerRadius = UDim.new(0, 8)
+    Corner.Parent = Btn
+    
+    local Stroke = Instance.new("UIStroke")
+    Stroke.Color = Color3.fromRGB(100, 100, 100)
+    Stroke.Thickness = 1.5
+    Stroke.Transparency = 0.7
+    Stroke.Parent = Btn
+    
+    return Btn
+end
+
+-- ==========================================
+-- GLOBAL VARIABLES
+-- ==========================================
+
+local Loops = {
+    fly = nil,
+    noclip = nil,
+    esp = nil,
+    speed = nil,
+    jump = nil,
+    infJump = nil,
+    autoFarm = nil
+}
+
+local Settings = {
+    flySpeed = 50,
+    walkSpeed = 16,
+    jumpPower = 50,
+    espEnabled = false,
+    noclipEnabled = false
+}
+
+local ESPObjects = {}
+
+-- ==========================================
+-- UTILITY FUNCTIONS
+-- ==========================================
+
+local function notify(title, text)
+    game.StarterGui:SetCore("SendNotification", {
+        Title = title;
+        Text = text;
+        Duration = 3;
+    })
+end
+
+local function getRoot()
+    return LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+end
+
+local function getHumanoid()
+    return LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid")
+end
+
+-- ==========================================
+-- PLAYER COMMANDS
+-- ==========================================
+
+-- WalkSpeed
+local speedBtn = createButton(PlayerPage, "🏃 Speed Boost", Color3.fromRGB(60, 120, 220))
+speedBtn.MouseButton1Click:Connect(function()
+    local hum = getHumanoid()
+    if hum then
+        hum.WalkSpeed = 100
+        notify("Speed", "WalkSpeed = 100")
     end
 end)
 
--- CLOSE BUTTON
-CloseBtn.MouseButton1Click:Connect(function()
-    MainFrame.Visible = false
-    isOpen = false
-    ToggleButton.BackgroundColor3 = Color3.fromRGB(60, 60, 220)
+-- Reset Speed
+local resetSpeedBtn = createButton(PlayerPage, "↩️ Reset Speed", Color3.fromRGB(80, 80, 80))
+resetSpeedBtn.MouseButton1Click:Connect(function()
+    local hum = getHumanoid()
+    if hum then
+        hum.WalkSpeed = 16
+        notify("Speed", "WalkSpeed zurückgesetzt")
+    end
 end)
 
--- TAB SWITCHING
-HomeTab.MouseButton1Click:Connect(function()
-    HomePage.Visible = true
-    CommandsPage.Visible = false
-    HomeTab.BackgroundColor3 = Color3.fromRGB(60, 120, 220)
-    HomeTab.TextColor3 = Color3.fromRGB(255, 255, 255)
-    CmdTab.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-    CmdTab.TextColor3 = Color3.fromRGB(200, 200, 200)
+-- Jump Power
+local jumpBtn = createButton(PlayerPage, "⬆️ Super Jump", Color3.fromRGB(60, 120, 220))
+jumpBtn.MouseButton1Click:Connect(function()
+    local hum = getHumanoid()
+    if hum then
+        hum.JumpPower = 120
+        notify("Jump", "JumpPower = 120")
+    end
 end)
 
-CmdTab.MouseButton1Click:Connect(function()
-    HomePage.Visible = false
-    CommandsPage.Visible = true
-    CmdTab.BackgroundColor3 = Color3.fromRGB(60, 120, 220)
-    CmdTab.TextColor3 = Color3.fromRGB(255, 255, 255)
-    HomeTab.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-    HomeTab.TextColor3 = Color3.fromRGB(200, 200, 200)
+-- Infinite Jump
+local infJumpActive = false
+local infJumpBtn = createButton(PlayerPage, "♾️ Infinite Jump", Color3.fromRGB(100, 60, 220))
+infJumpBtn.MouseButton1Click:Connect(function()
+    infJumpActive = not infJumpActive
+    
+    if infJumpActive then
+        infJumpBtn.BackgroundColor3 = Color3.fromRGB(60, 220, 100)
+        notify("Infinite Jump", "Aktiviert")
+        
+        Loops.infJump = UserInputService.JumpRequest:Connect(function()
+            if infJumpActive and getHumanoid() then
+                getHumanoid():ChangeState(Enum.HumanoidStateType.Jumping)
+            end
+        end)
+    else
+        infJumpBtn.BackgroundColor3 = Color3.fromRGB(100, 60, 220)
+        notify("Infinite Jump", "Deaktiviert")
+        if Loops.infJump then
+            Loops.infJump:Disconnect()
+        end
+    end
 end)
 
--- COMMANDS
-local Commands = {}
-local
+-- God Mode
+local godBtn = createButton(PlayerPage, "🛡️ God Mode", Color3.fromRGB(220, 180, 60))
+godBtn.MouseButton1Click:Connect(function()
+    local hum = getHumanoid()
+    if hum then
+        hum.MaxHealth = math.huge
+        hum.Health = math.huge
+        notify("God Mode", "Aktiviert")
+    end
+end)
+
+-- Fly
+local flyActive = false
+local flyBtn = createButton(PlayerPage, "✈️ Fly", Color3.fromRGB(60, 180, 220))
+flyBtn.MouseButton1Click:Connect(function()
+    flyActive = not flyActive
+    
+    if flyActive then
+        flyBtn.BackgroundColor3 = Color3.fromRGB(60, 220, 100)
+        notify("Fly", "Aktiviert (WASD + Space/Shift)")
+        
+        local root = getRoot()
+        if not root then return end
+        
+        local bg = Instance.new("BodyGyro", root)
+        bg.MaxTorque = Vector3.new(9e9, 9e9, 9e9)
+        bg.P = 9e4
+        
+        local bv = Instance.new("BodyVelocity", root)
+        bv.MaxForce = Vector3.new(9e9, 9e9, 9e9)
+        bv.Velocity = Vector3.new(0, 0, 0)
+        
+        Loops.fly = RunService.Heartbeat:Connect(function()
+            if not flyActive then return end
+            
+            local root = getRoot()
+            if not root then return end
+            
+            local cam = workspace.CurrentCamera
+            local speed = 50
+            
+            bg.CFrame = cam.CFrame
+            
+            local velocity = Vector3.new(0, 0, 0)
+            
+            if UserInputService:IsKeyDown(Enum.KeyCode
