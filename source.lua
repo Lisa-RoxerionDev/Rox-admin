@@ -1,349 +1,446 @@
--- Universal Admin System v1.0
--- Schwebender Ball UI inspiriert von Infinite Yield
+-- Universal Admin Script mit Rayfield UI
+-- Für Roblox Executor
+
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+
+local Window = Rayfield:CreateWindow({
+   Name = "Universal Admin ⚡",
+   LoadingTitle = "Universal Admin wird geladen",
+   LoadingSubtitle = "by Admin System",
+   ConfigurationSaving = {
+      Enabled = true,
+      FolderName = "UniversalAdmin",
+      FileName = "AdminConfig"
+   },
+   Discord = {
+      Enabled = false,
+      Invite = "noinvite",
+      RememberJoins = true
+   },
+   KeySystem = false
+})
 
 local Players = game:GetService("Players")
-local UserInputService = game:GetService("UserInputService")
-local TweenService = game:GetService("TweenService")
-local RunService = game:GetService("RunService")
-
 local LocalPlayer = Players.LocalPlayer
-local Mouse = LocalPlayer:GetMouse()
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
 
--- Konfiguration
-local CONFIG = {
-    PREFIX = ";",
-    BALL_SIZE = 60,
-    BALL_COLOR = Color3.fromRGB(0, 170, 255),
-    ANIMATION_SPEED = 0.3
-}
-
--- UI Erstellung
-local function createUI()
-    local ScreenGui = Instance.new("ScreenGui")
-    ScreenGui.Name = "UniversalAdmin"
-    ScreenGui.ResetOnSpawn = false
-    ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-    
-    -- Schwebender Ball
-    local Ball = Instance.new("Frame")
-    Ball.Name = "FloatingBall"
-    Ball.Size = UDim2.new(0, CONFIG.BALL_SIZE, 0, CONFIG.BALL_SIZE)
-    Ball.Position = UDim2.new(0.5, 0, 0.1, 0)
-    Ball.AnchorPoint = Vector2.new(0.5, 0.5)
-    Ball.BackgroundColor3 = CONFIG.BALL_COLOR
-    Ball.BorderSizePixel = 0
-    Ball.Active = true
-    Ball.Draggable = true
-    Ball.Parent = ScreenGui
-    
-    local BallCorner = Instance.new("UICorner")
-    BallCorner.CornerRadius = UDim.new(1, 0)
-    BallCorner.Parent = Ball
-    
-    -- Glow Effekt
-    local Glow = Instance.new("ImageLabel")
-    Glow.Name = "Glow"
-    Glow.Size = UDim2.new(1.4, 0, 1.4, 0)
-    Glow.Position = UDim2.new(0.5, 0, 0.5, 0)
-    Glow.AnchorPoint = Vector2.new(0.5, 0.5)
-    Glow.BackgroundTransparency = 1
-    Glow.Image = "rbxasset://textures/ui/GuiImagePlaceholder.png"
-    Glow.ImageColor3 = CONFIG.BALL_COLOR
-    Glow.ImageTransparency = 0.7
-    Glow.Parent = Ball
-    
-    -- Icon
-    local Icon = Instance.new("TextLabel")
-    Icon.Size = UDim2.new(1, 0, 1, 0)
-    Icon.BackgroundTransparency = 1
-    Icon.Text = "⚡"
-    Icon.TextColor3 = Color3.new(1, 1, 1)
-    Icon.TextSize = 32
-    Icon.Font = Enum.Font.GothamBold
-    Icon.Parent = Ball
-    
-    -- Command Window
-    local CommandWindow = Instance.new("Frame")
-    CommandWindow.Name = "CommandWindow"
-    CommandWindow.Size = UDim2.new(0, 450, 0, 350)
-    CommandWindow.Position = UDim2.new(0.5, 0, 0.5, 0)
-    CommandWindow.AnchorPoint = Vector2.new(0.5, 0.5)
-    CommandWindow.BackgroundColor3 = Color3.fromRGB(25, 25, 30)
-    CommandWindow.BorderSizePixel = 0
-    CommandWindow.Visible = false
-    CommandWindow.Parent = ScreenGui
-    
-    local WindowCorner = Instance.new("UICorner")
-    WindowCorner.CornerRadius = UDim.new(0, 10)
-    WindowCorner.Parent = CommandWindow
-    
-    -- Titlebar
-    local TitleBar = Instance.new("Frame")
-    TitleBar.Name = "TitleBar"
-    TitleBar.Size = UDim2.new(1, 0, 0, 40)
-    TitleBar.BackgroundColor3 = CONFIG.BALL_COLOR
-    TitleBar.BorderSizePixel = 0
-    TitleBar.Parent = CommandWindow
-    
-    local TitleCorner = Instance.new("UICorner")
-    TitleCorner.CornerRadius = UDim.new(0, 10)
-    TitleCorner.Parent = TitleBar
-    
-    local TitleBottomCover = Instance.new("Frame")
-    TitleBottomCover.Size = UDim2.new(1, 0, 0, 10)
-    TitleBottomCover.Position = UDim2.new(0, 0, 1, -10)
-    TitleBottomCover.BackgroundColor3 = CONFIG.BALL_COLOR
-    TitleBottomCover.BorderSizePixel = 0
-    TitleBottomCover.Parent = TitleBar
-    
-    local Title = Instance.new("TextLabel")
-    Title.Size = UDim2.new(1, -80, 1, 0)
-    Title.Position = UDim2.new(0, 10, 0, 0)
-    Title.BackgroundTransparency = 1
-    Title.Text = "Universal Admin"
-    Title.TextColor3 = Color3.new(1, 1, 1)
-    Title.TextSize = 18
-    Title.Font = Enum.Font.GothamBold
-    Title.TextXAlignment = Enum.TextXAlignment.Left
-    Title.Parent = TitleBar
-    
-    -- Close Button
-    local CloseButton = Instance.new("TextButton")
-    CloseButton.Name = "CloseButton"
-    CloseButton.Size = UDim2.new(0, 30, 0, 30)
-    CloseButton.Position = UDim2.new(1, -35, 0.5, 0)
-    CloseButton.AnchorPoint = Vector2.new(0, 0.5)
-    CloseButton.BackgroundColor3 = Color3.fromRGB(255, 60, 60)
-    CloseButton.Text = "×"
-    CloseButton.TextColor3 = Color3.new(1, 1, 1)
-    CloseButton.TextSize = 24
-    CloseButton.Font = Enum.Font.GothamBold
-    CloseButton.BorderSizePixel = 0
-    CloseButton.Parent = TitleBar
-    
-    local CloseCorner = Instance.new("UICorner")
-    CloseCorner.CornerRadius = UDim.new(1, 0)
-    CloseCorner.Parent = CloseButton
-    
-    -- Command Input
-    local CommandInput = Instance.new("TextBox")
-    CommandInput.Name = "CommandInput"
-    CommandInput.Size = UDim2.new(1, -20, 0, 35)
-    CommandInput.Position = UDim2.new(0, 10, 0, 50)
-    CommandInput.BackgroundColor3 = Color3.fromRGB(35, 35, 40)
-    CommandInput.BorderSizePixel = 0
-    CommandInput.PlaceholderText = "Befehl eingeben (z.B. ;fly, ;speed 100)..."
-    CommandInput.PlaceholderColor3 = Color3.fromRGB(150, 150, 150)
-    CommandInput.Text = ""
-    CommandInput.TextColor3 = Color3.new(1, 1, 1)
-    CommandInput.TextSize = 14
-    CommandInput.Font = Enum.Font.Gotham
-    CommandInput.TextXAlignment = Enum.TextXAlignment.Left
-    CommandInput.ClearTextOnFocus = false
-    CommandInput.Parent = CommandWindow
-    
-    local InputCorner = Instance.new("UICorner")
-    InputCorner.CornerRadius = UDim.new(0, 6)
-    InputCorner.Parent = CommandInput
-    
-    -- Output ScrollingFrame
-    local Output = Instance.new("ScrollingFrame")
-    Output.Name = "Output"
-    Output.Size = UDim2.new(1, -20, 1, -100)
-    Output.Position = UDim2.new(0, 10, 0, 95)
-    Output.BackgroundColor3 = Color3.fromRGB(20, 20, 25)
-    Output.BorderSizePixel = 0
-    Output.ScrollBarThickness = 4
-    Output.CanvasSize = UDim2.new(0, 0, 0, 0)
-    Output.AutomaticCanvasSize = Enum.AutomaticSize.Y
-    Output.Parent = CommandWindow
-    
-    local OutputCorner = Instance.new("UICorner")
-    OutputCorner.CornerRadius = UDim.new(0, 6)
-    OutputCorner.Parent = Output
-    
-    local OutputList = Instance.new("UIListLayout")
-    OutputList.Padding = UDim.new(0, 5)
-    OutputList.Parent = Output
-    
-    local OutputPadding = Instance.new("UIPadding")
-    OutputPadding.PaddingLeft = UDim.new(0, 10)
-    OutputPadding.PaddingRight = UDim.new(0, 10)
-    OutputPadding.PaddingTop = UDim.new(0, 10)
-    OutputPadding.PaddingBottom = UDim.new(0, 10)
-    OutputPadding.Parent = Output
-    
-    ScreenGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
-    
-    return ScreenGui, Ball, CommandWindow, CommandInput, Output, CloseButton
-end
-
--- Logging System
-local function addLog(outputFrame, message, color)
-    color = color or Color3.fromRGB(255, 255, 255)
-    
-    local LogLabel = Instance.new("TextLabel")
-    LogLabel.Size = UDim2.new(1, 0, 0, 20)
-    LogLabel.BackgroundTransparency = 1
-    LogLabel.Text = "[" .. os.date("%H:%M:%S") .. "] " .. message
-    LogLabel.TextColor3 = color
-    LogLabel.TextSize = 13
-    LogLabel.Font = Enum.Font.Code
-    LogLabel.TextXAlignment = Enum.TextXAlignment.Left
-    LogLabel.TextWrapped = true
-    LogLabel.AutomaticSize = Enum.AutomaticSize.Y
-    LogLabel.Parent = outputFrame
-end
-
--- Admin Commands
-local Commands = {}
+-- Variablen
 local FlyEnabled = false
 local NoClipEnabled = false
-local FlySpeed = 50
+local ESPEnabled = false
+local InfiniteJumpEnabled = false
+local WalkSpeed = 16
+local JumpPower = 50
 
-Commands.fly = {
-    Description = "Aktiviert Flug-Modus",
-    Execute = function(args, output)
-        FlyEnabled = not FlyEnabled
-        if FlyEnabled then
-            local character = LocalPlayer.Character
-            local humanoid = character and character:FindFirstChildOfClass("Humanoid")
-            local rootPart = humanoid and humanoid.RootPart
-            
+-- Tab: Charakter
+local CharacterTab = Window:CreateTab("👤 Charakter", 4483362458)
+
+local SpeedSlider = CharacterTab:CreateSlider({
+   Name = "Laufgeschwindigkeit",
+   Range = {16, 500},
+   Increment = 1,
+   Suffix = " Speed",
+   CurrentValue = 16,
+   Flag = "WalkSpeedSlider",
+   Callback = function(Value)
+      WalkSpeed = Value
+      local character = LocalPlayer.Character
+      local humanoid = character and character:FindFirstChildOfClass("Humanoid")
+      if humanoid then
+         humanoid.WalkSpeed = Value
+      end
+   end,
+})
+
+local JumpSlider = CharacterTab:CreateSlider({
+   Name = "Sprunghöhe",
+   Range = {50, 500},
+   Increment = 1,
+   Suffix = " Power",
+   CurrentValue = 50,
+   Flag = "JumpPowerSlider",
+   Callback = function(Value)
+      JumpPower = Value
+      local character = LocalPlayer.Character
+      local humanoid = character and character:FindFirstChildOfClass("Humanoid")
+      if humanoid then
+         humanoid.JumpPower = Value
+         humanoid.UseJumpPower = true
+      end
+   end,
+})
+
+local FlyToggle = CharacterTab:CreateToggle({
+   Name = "Fliegen (E = hoch, Q = runter)",
+   CurrentValue = false,
+   Flag = "FlyToggle",
+   Callback = function(Value)
+      FlyEnabled = Value
+      if not Value then
+         local character = LocalPlayer.Character
+         if character then
+            local rootPart = character:FindFirstChild("HumanoidRootPart")
             if rootPart then
-                local BV = Instance.new("BodyVelocity")
-                BV.Name = "FlyVelocity"
-                BV.MaxForce = Vector3.new(9e9, 9e9, 9e9)
-                BV.Velocity = Vector3.new(0, 0, 0)
-                BV.Parent = rootPart
-                
-                local BG = Instance.new("BodyGyro")
-                BG.Name = "FlyGyro"
-                BG.MaxTorque = Vector3.new(9e9, 9e9, 9e9)
-                BG.CFrame = rootPart.CFrame
-                BG.Parent = rootPart
-                
-                addLog(output, "Flug aktiviert! WASD zum Fliegen, Q/E für hoch/runter", Color3.fromRGB(0, 255, 0))
+               if rootPart:FindFirstChild("FlyVelocity") then rootPart.FlyVelocity:Destroy() end
+               if rootPart:FindFirstChild("FlyGyro") then rootPart.FlyGyro:Destroy() end
             end
-        else
-            local character = LocalPlayer.Character
-            if character then
-                local rootPart = character:FindFirstChild("HumanoidRootPart")
-                if rootPart then
-                    if rootPart:FindFirstChild("FlyVelocity") then rootPart.FlyVelocity:Destroy() end
-                    if rootPart:FindFirstChild("FlyGyro") then rootPart.FlyGyro:Destroy() end
-                end
-            end
-            addLog(output, "Flug deaktiviert", Color3.fromRGB(255, 150, 0))
-        end
-    end
-}
+         end
+      end
+   end,
+})
 
-Commands.speed = {
-    Description = "Setzt Laufgeschwindigkeit (Standard: 16)",
-    Execute = function(args, output)
-        local speed = tonumber(args[1]) or 16
-        local character = LocalPlayer.Character
-        local humanoid = character and character:FindFirstChildOfClass("Humanoid")
-        
-        if humanoid then
-            humanoid.WalkSpeed = speed
-            addLog(output, "Geschwindigkeit auf " .. speed .. " gesetzt", Color3.fromRGB(0, 255, 0))
-        end
-    end
-}
+local FlySpeedSlider = CharacterTab:CreateSlider({
+   Name = "Flug-Geschwindigkeit",
+   Range = {10, 300},
+   Increment = 5,
+   Suffix = " Speed",
+   CurrentValue = 50,
+   Flag = "FlySpeedSlider",
+   Callback = function(Value)
+   end,
+})
 
-Commands.jump = {
-    Description = "Setzt Sprunghöhe (Standard: 50)",
-    Execute = function(args, output)
-        local power = tonumber(args[1]) or 50
-        local character = LocalPlayer.Character
-        local humanoid = character and character:FindFirstChildOfClass("Humanoid")
-        
-        if humanoid then
-            humanoid.JumpPower = power
-            addLog(output, "Sprungkraft auf " .. power .. " gesetzt", Color3.fromRGB(0, 255, 0))
-        end
-    end
-}
+local NoClipToggle = CharacterTab:CreateToggle({
+   Name = "NoClip (durch Wände gehen)",
+   CurrentValue = false,
+   Flag = "NoClipToggle",
+   Callback = function(Value)
+      NoClipEnabled = Value
+   end,
+})
 
-Commands.noclip = {
-    Description = "Durchgehen durch Wände",
-    Execute = function(args, output)
-        NoClipEnabled = not NoClipEnabled
-        addLog(output, "NoClip " .. (NoClipEnabled and "aktiviert" or "deaktiviert"), 
-               NoClipEnabled and Color3.fromRGB(0, 255, 0) or Color3.fromRGB(255, 150, 0))
-    end
-}
+local InfiniteJumpToggle = CharacterTab:CreateToggle({
+   Name = "Infinite Jump",
+   CurrentValue = false,
+   Flag = "InfiniteJumpToggle",
+   Callback = function(Value)
+      InfiniteJumpEnabled = Value
+   end,
+})
 
-Commands.god = {
-    Description = "Unbegrenzte Gesundheit",
-    Execute = function(args, output)
-        local character = LocalPlayer.Character
-        local humanoid = character and character:FindFirstChildOfClass("Humanoid")
-        
-        if humanoid then
-            humanoid.MaxHealth = math.huge
-            humanoid.Health = math.huge
-            addLog(output, "God-Modus aktiviert", Color3.fromRGB(255, 215, 0))
-        end
-    end
-}
+CharacterTab:CreateButton({
+   Name = "God Mode (Unendlich HP)",
+   Callback = function()
+      local character = LocalPlayer.Character
+      local humanoid = character and character:FindFirstChildOfClass("Humanoid")
+      if humanoid then
+         humanoid.MaxHealth = math.huge
+         humanoid.Health = math.huge
+         Rayfield:Notify({
+            Title = "God Mode",
+            Content = "Unendliche Gesundheit aktiviert!",
+            Duration = 3,
+            Image = 4483362458,
+         })
+      end
+   end,
+})
 
-Commands.tp = {
-    Description = "Teleportiert zu Spieler (;tp Spielername)",
-    Execute = function(args, output)
-        if not args[1] then
-            addLog(output, "Fehler: Spielername fehlt", Color3.fromRGB(255, 0, 0))
-            return
-        end
-        
-        local targetName = args[1]:lower()
-        local target = nil
-        
-        for _, player in pairs(Players:GetPlayers()) do
-            if player.Name:lower():sub(1, #targetName) == targetName then
-                target = player
-                break
-            end
-        end
-        
-        if target and target.Character and target.Character:FindFirstChild("HumanoidRootPart") then
+CharacterTab:CreateButton({
+   Name = "Reset Charakter",
+   Callback = function()
+      local character = LocalPlayer.Character
+      if character then
+         character:BreakJoints()
+      end
+   end,
+})
+
+-- Tab: Teleport
+local TeleportTab = Window:CreateTab("🌍 Teleport", 4483362458)
+
+local PlayerDropdown = TeleportTab:CreateDropdown({
+   Name = "Wähle Spieler",
+   Options = {},
+   CurrentOption = "",
+   Flag = "PlayerDropdown",
+   Callback = function(Option)
+   end,
+})
+
+-- Aktualisiere Spieler-Liste
+local function updatePlayerList()
+   local playerNames = {}
+   for _, player in pairs(Players:GetPlayers()) do
+      if player ~= LocalPlayer then
+         table.insert(playerNames, player.Name)
+      end
+   end
+   PlayerDropdown:Refresh(playerNames)
+end
+
+updatePlayerList()
+Players.PlayerAdded:Connect(updatePlayerList)
+Players.PlayerRemoving:Connect(updatePlayerList)
+
+TeleportTab:CreateButton({
+   Name = "Teleport zu Spieler",
+   Callback = function()
+      local selectedPlayer = PlayerDropdown.CurrentOption
+      if selectedPlayer and selectedPlayer ~= "" then
+         local target = Players:FindFirstChild(selectedPlayer)
+         if target and target.Character and target.Character:FindFirstChild("HumanoidRootPart") then
             local character = LocalPlayer.Character
             if character and character:FindFirstChild("HumanoidRootPart") then
-                character.HumanoidRootPart.CFrame = target.Character.HumanoidRootPart.CFrame
-                addLog(output, "Teleportiert zu " .. target.Name, Color3.fromRGB(0, 255, 0))
+               character.HumanoidRootPart.CFrame = target.Character.HumanoidRootPart.CFrame
+               Rayfield:Notify({
+                  Title = "Teleport",
+                  Content = "Teleportiert zu " .. selectedPlayer,
+                  Duration = 3,
+                  Image = 4483362458,
+               })
             end
-        else
-            addLog(output, "Spieler nicht gefunden", Color3.fromRGB(255, 0, 0))
-        end
-    end
-}
+         end
+      end
+   end,
+})
 
-Commands.respawn = {
-    Description = "Respawnt deinen Charakter",
-    Execute = function(args, output)
-        local character = LocalPlayer.Character
-        if character then
-            character:BreakJoints()
-            addLog(output, "Respawning...", Color3.fromRGB(255, 255, 0))
-        end
-    end
-}
+local WaypointName = ""
+local Waypoints = {}
 
-Commands.cmds = {
-    Description = "Zeigt alle Befehle",
-    Execute = function(args, output)
-        addLog(output, "=== Verfügbare Befehle ===", Color3.fromRGB(0, 170, 255))
-        for name, cmd in pairs(Commands) do
-            addLog(output, CONFIG.PREFIX .. name .. " - " .. cmd.Description, Color3.fromRGB(200, 200, 200))
-        end
-    end
-}
+local WaypointInput = TeleportTab:CreateInput({
+   Name = "Waypoint Name",
+   PlaceholderText = "z.B. Spawn",
+   RemoveTextAfterFocusLost = false,
+   Callback = function(Text)
+      WaypointName = Text
+   end,
+})
 
-Commands.clear = {
-    Description = "Löscht Output",
-    Execute = function(args, output)
-        for _, child in pairs(output:GetChildren()) do
-            if child:IsA("TextLabel") then
-                child
+TeleportTab:CreateButton({
+   Name = "Waypoint setzen",
+   Callback = function()
+      if WaypointName and WaypointName ~= "" then
+         local character = LocalPlayer.Character
+         if character and character:FindFirstChild("HumanoidRootPart") then
+            Waypoints[WaypointName] = character.HumanoidRootPart.CFrame
+            Rayfield:Notify({
+               Title = "Waypoint",
+               Content = "Waypoint '" .. WaypointName .. "' gespeichert!",
+               Duration = 3,
+               Image = 4483362458,
+            })
+         end
+      end
+   end,
+})
+
+TeleportTab:CreateButton({
+   Name = "Zu Waypoint teleportieren",
+   Callback = function()
+      if WaypointName and Waypoints[WaypointName] then
+         local character = LocalPlayer.Character
+         if character and character:FindFirstChild("HumanoidRootPart") then
+            character.HumanoidRootPart.CFrame = Waypoints[WaypointName]
+            Rayfield:Notify({
+               Title = "Waypoint",
+               Content = "Teleportiert zu '" .. WaypointName .. "'",
+               Duration = 3,
+               Image = 4483362458,
+            })
+         end
+      end
+   end,
+})
+
+-- Tab: Visuell
+local VisualTab = Window:CreateTab("👁️ Visuell", 4483362458)
+
+local ESPToggle = VisualTab:CreateToggle({
+   Name = "ESP (Spieler durch Wände sehen)",
+   CurrentValue = false,
+   Flag = "ESPToggle",
+   Callback = function(Value)
+      ESPEnabled = Value
+      if Value then
+         for _, player in pairs(Players:GetPlayers()) do
+            if player ~= LocalPlayer and player.Character then
+               addESP(player.Character)
+            end
+         end
+      else
+         removeAllESP()
+      end
+   end,
+})
+
+local FullbrightToggle = VisualTab:CreateToggle({
+   Name = "Fullbright (Alles hell)",
+   CurrentValue = false,
+   Flag = "FullbrightToggle",
+   Callback = function(Value)
+      if Value then
+         game:GetService("Lighting").Ambient = Color3.new(1, 1, 1)
+         game:GetService("Lighting").Brightness = 2
+         game:GetService("Lighting").FogEnd = 100000
+         game:GetService("Lighting").GlobalShadows = false
+         game:GetService("Lighting").OutdoorAmbient = Color3.new(1, 1, 1)
+      else
+         game:GetService("Lighting").Ambient = Color3.new(0.5, 0.5, 0.5)
+         game:GetService("Lighting").Brightness = 1
+         game:GetService("Lighting").FogEnd = 100000
+         game:GetService("Lighting").GlobalShadows = true
+         game:GetService("Lighting").OutdoorAmbient = Color3.new(0.5, 0.5, 0.5)
+      end
+   end,
+})
+
+-- Tab: Sonstiges
+local MiscTab = Window:CreateTab("⚙️ Sonstiges", 4483362458)
+
+MiscTab:CreateButton({
+   Name = "Anti-AFK",
+   Callback = function()
+      local VirtualUser = game:GetService("VirtualUser")
+      game:GetService("Players").LocalPlayer.Idled:Connect(function()
+         VirtualUser:CaptureController()
+         VirtualUser:ClickButton2(Vector2.new())
+      end)
+      Rayfield:Notify({
+         Title = "Anti-AFK",
+         Content = "Anti-AFK aktiviert!",
+         Duration = 3,
+         Image = 4483362458,
+      })
+   end,
+})
+
+MiscTab:CreateButton({
+   Name = "Rejoin Server",
+   Callback = function()
+      game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, game.JobId, LocalPlayer)
+   end,
+})
+
+MiscTab:CreateButton({
+   Name = "Server Hop (neuer Server)",
+   Callback = function()
+      local servers = {}
+      local req = game:HttpGet("https://games.roblox.com/v1/games/" .. game.PlaceId .. "/servers/Public?sortOrder=Asc&limit=100")
+      local body = game:GetService("HttpService"):JSONDecode(req)
+      
+      if body and body.data then
+         for _, server in pairs(body.data) do
+            if server.playing < server.maxPlayers and server.id ~= game.JobId then
+               game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, server.id, LocalPlayer)
+               return
+            end
+         end
+      end
+   end,
+})
+
+MiscTab:CreateButton({
+   Name = "UI Kopieren (Clipboard)",
+   Callback = function()
+      setclipboard("loadstring(game:HttpGet('https://raw.githubusercontent.com/DEINNAME/DEINREPO/main/source.lua'))()")
+      Rayfield:Notify({
+         Title = "Clipboard",
+         Content = "Loadstring in Zwischenablage kopiert!",
+         Duration = 3,
+         Image = 4483362458,
+      })
+   end,
+})
+
+-- ESP Funktionen
+function addESP(character)
+   if not character or character:FindFirstChild("ESPBox") then return end
+   
+   local rootPart = character:FindFirstChild("HumanoidRootPart")
+   if not rootPart then return end
+   
+   local box = Instance.new("BoxHandleAdornment")
+   box.Name = "ESPBox"
+   box.Size = Vector3.new(4, 5, 1)
+   box.Color3 = Color3.fromRGB(255, 0, 0)
+   box.Transparency = 0.7
+   box.AlwaysOnTop = true
+   box.ZIndex = 5
+   box.Adornee = rootPart
+   box.Parent = character
+   
+   local humanoid = character:FindFirstChildOfClass("Humanoid")
+   if humanoid then
+      local billboard = Instance.new("BillboardGui")
+      billboard.Name = "ESPName"
+      billboard.Adornee = rootPart
+      billboard.Size = UDim2.new(0, 100, 0, 50)
+      billboard.StudsOffset = Vector3.new(0, 3, 0)
+      billboard.AlwaysOnTop = true
+      billboard.Parent = character
+      
+      local textLabel = Instance.new("TextLabel")
+      textLabel.Size = UDim2.new(1, 0, 1, 0)
+      textLabel.BackgroundTransparency = 1
+      textLabel.Text = character.Name
+      textLabel.TextColor3 = Color3.new(1, 1, 1)
+      textLabel.TextStrokeTransparency = 0
+      textLabel.TextSize = 16
+      textLabel.Font = Enum.Font.GothamBold
+      textLabel.Parent = billboard
+   end
+end
+
+function removeAllESP()
+   for _, player in pairs(Players:GetPlayers()) do
+      if player.Character then
+         if player.Character:FindFirstChild("ESPBox") then
+            player.Character.ESPBox:Destroy()
+         end
+         if player.Character:FindFirstChild("ESPName") then
+            player.Character.ESPName:Destroy()
+         end
+      end
+   end
+end
+
+-- Charakter Update Loop
+LocalPlayer.CharacterAdded:Connect(function(character)
+   character:WaitForChild("Humanoid").WalkSpeed = WalkSpeed
+   character:WaitForChild("Humanoid").JumpPower = JumpPower
+   character:WaitForChild("Humanoid").UseJumpPower = true
+end)
+
+-- Fly System
+RunService.RenderStepped:Connect(function()
+   if FlyEnabled then
+      local character = LocalPlayer.Character
+      local humanoid = character and character:FindFirstChildOfClass("Humanoid")
+      local rootPart = humanoid and humanoid.RootPart
+      
+      if rootPart then
+         local camera = workspace.CurrentCamera
+         local speed = Rayfield.Flags["FlySpeedSlider"].CurrentValue or 50
+         
+         if not rootPart:FindFirstChild("FlyVelocity") then
+            local BV = Instance.new("BodyVelocity")
+            BV.Name = "FlyVelocity"
+            BV.MaxForce = Vector3.new(9e9, 9e9, 9e9)
+            BV.Velocity = Vector3.new(0, 0, 0)
+            BV.Parent = rootPart
+            
+            local BG = Instance.new("BodyGyro")
+            BG.Name = "FlyGyro"
+            BG.MaxTorque = Vector3.new(9e9, 9e9, 9e9)
+            BG.CFrame = rootPart.CFrame
+            BG.Parent = rootPart
+         end
+         
+         local BV = rootPart:FindFirstChild("FlyVelocity")
+         local BG = rootPart:FindFirstChild("FlyGyro")
+         
+         if BV and BG then
+            local velocity = Vector3.new(0, 0, 0)
+            
+            if UserInputService:IsKeyDown(Enum.KeyCode.W) then
+               velocity = velocity + (camera.CFrame.LookVector * speed)
+            end
+            if UserInputService:IsKeyDown(Enum.KeyCode.S) then
+               velocity = velocity - (camera.CFrame.LookVector * speed)
+            end
+            if UserInputService:IsKeyDown(Enum.KeyCode.A) then
+               velocity = velocity - (camera.CFrame.RightVector * speed)
+            end
+            if UserInputService:IsKeyDown(Enum.KeyCode.D) then
