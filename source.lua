@@ -21,10 +21,7 @@ ScreenGui.ResetOnSpawn = false
 ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 ScreenGui.Parent = game.CoreGui
 
--- ====================================
 -- RUNDER TOGGLE BUTTON
--- ====================================
-
 local ToggleButton = Instance.new("ImageButton")
 ToggleButton.Name = "ToggleButton"
 ToggleButton.Size = UDim2.new(0, 60, 0, 60)
@@ -36,12 +33,10 @@ ToggleButton.Active = true
 ToggleButton.Draggable = true
 ToggleButton.Parent = ScreenGui
 
--- Rund machen
 local ButtonCorner = Instance.new("UICorner")
 ButtonCorner.CornerRadius = UDim.new(1, 0)
 ButtonCorner.Parent = ToggleButton
 
--- Gradient für coolen Effekt
 local Gradient = Instance.new("UIGradient")
 Gradient.Color = ColorSequence.new{
     ColorSequenceKeypoint.new(0, Color3.fromRGB(100, 50, 200)),
@@ -50,7 +45,6 @@ Gradient.Color = ColorSequence.new{
 Gradient.Rotation = 45
 Gradient.Parent = ToggleButton
 
--- Text in Button
 local ButtonText = Instance.new("TextLabel")
 ButtonText.Size = UDim2.new(1, 0, 1, 0)
 ButtonText.BackgroundTransparency = 1
@@ -60,17 +54,13 @@ ButtonText.TextSize = 16
 ButtonText.Font = Enum.Font.GothamBold
 ButtonText.Parent = ToggleButton
 
--- Stroke für bessere Sichtbarkeit
 local Stroke = Instance.new("UIStroke")
 Stroke.Color = Color3.fromRGB(255, 255, 255)
 Stroke.Thickness = 2
 Stroke.Transparency = 0.5
 Stroke.Parent = ToggleButton
 
--- ====================================
--- HAUPT-GUI (versteckt am Anfang)
--- ====================================
-
+-- HAUPT-GUI
 local MainFrame = Instance.new("Frame")
 MainFrame.Name = "MainFrame"
 MainFrame.Size = UDim2.new(0, 550, 0, 400)
@@ -90,10 +80,7 @@ MainStroke.Color = Color3.fromRGB(70, 70, 70)
 MainStroke.Thickness = 2
 MainStroke.Parent = MainFrame
 
--- ====================================
 -- TITLE BAR
--- ====================================
-
 local TitleBar = Instance.new("Frame")
 TitleBar.Size = UDim2.new(1, 0, 0, 45)
 TitleBar.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
@@ -104,7 +91,6 @@ local TitleCorner = Instance.new("UICorner")
 TitleCorner.CornerRadius = UDim.new(0, 12)
 TitleCorner.Parent = TitleBar
 
--- Fix für untere Ecken
 local TitleFix = Instance.new("Frame")
 TitleFix.Size = UDim2.new(1, 0, 0, 12)
 TitleFix.Position = UDim2.new(0, 0, 1, -12)
@@ -112,7 +98,6 @@ TitleFix.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
 TitleFix.BorderSizePixel = 0
 TitleFix.Parent = TitleBar
 
--- Title Text
 local Title = Instance.new("TextLabel")
 Title.Size = UDim2.new(1, -100, 1, 0)
 Title.Position = UDim2.new(0, 15, 0, 0)
@@ -124,7 +109,6 @@ Title.Font = Enum.Font.GothamBold
 Title.TextXAlignment = Enum.TextXAlignment.Left
 Title.Parent = TitleBar
 
--- Close Button
 local CloseBtn = Instance.new("TextButton")
 CloseBtn.Size = UDim2.new(0, 35, 0, 35)
 CloseBtn.Position = UDim2.new(1, -40, 0, 5)
@@ -140,10 +124,7 @@ local CloseCorner = Instance.new("UICorner")
 CloseCorner.CornerRadius = UDim.new(1, 0)
 CloseCorner.Parent = CloseBtn
 
--- ====================================
--- TAB BUTTONS (Home & Commands)
--- ====================================
-
+-- TAB BUTTONS
 local TabContainer = Instance.new("Frame")
 TabContainer.Size = UDim2.new(1, -20, 0, 35)
 TabContainer.Position = UDim2.new(0, 10, 0, 55)
@@ -172,10 +153,7 @@ end
 local HomeTab = createTab("🏠 Home", 0)
 local CommandsTab = createTab("📋 Commands", 0.52)
 
--- ====================================
 -- HOME PAGE
--- ====================================
-
 local HomePage = Instance.new("Frame")
 HomePage.Name = "HomePage"
 HomePage.Size = UDim2.new(1, -20, 1, -140)
@@ -184,7 +162,6 @@ HomePage.BackgroundTransparency = 1
 HomePage.Visible = true
 HomePage.Parent = MainFrame
 
--- Command Input
 local CommandBox = Instance.new("TextBox")
 CommandBox.Size = UDim2.new(1, 0, 0, 40)
 CommandBox.Position = UDim2.new(0, 0, 0, 0)
@@ -203,7 +180,6 @@ local InputCorner = Instance.new("UICorner")
 InputCorner.CornerRadius = UDim.new(0, 8)
 InputCorner.Parent = CommandBox
 
--- Output/Log
 local LogFrame = Instance.new("ScrollingFrame")
 LogFrame.Size = UDim2.new(1, 0, 1, -50)
 LogFrame.Position = UDim2.new(0, 0, 0, 50)
@@ -228,10 +204,7 @@ LogPadding.PaddingLeft = UDim.new(0, 8)
 LogPadding.PaddingRight = UDim.new(0, 8)
 LogPadding.Parent = LogFrame
 
--- ====================================
 -- COMMANDS PAGE
--- ====================================
-
 local CommandsPage = Instance.new("ScrollingFrame")
 CommandsPage.Name = "CommandsPage"
 CommandsPage.Size = UDim2.new(1, -20, 1, -140)
@@ -259,11 +232,7 @@ CmdPadding.PaddingRight = UDim.new(0, 10)
 CmdPadding.PaddingBottom = UDim.new(0, 10)
 CmdPadding.Parent = CommandsPage
 
--- ====================================
 -- FUNCTIONS
--- ====================================
-
--- Log hinzufügen
 local function addLog(text, color)
     local LogLabel = Instance.new("TextLabel")
     LogLabel.Size = UDim2.new(1, -10, 0, 25)
@@ -280,7 +249,6 @@ local function addLog(text, color)
     LogFrame.CanvasPosition = Vector2.new(0, LogFrame.CanvasSize.Y.Offset)
 end
 
--- Command Button erstellen
 local function createCommandButton(cmdName, cmdDesc, cmdUsage)
     local CmdButton = Instance.new("Frame")
     CmdButton.Size = UDim2.new(1, -10, 0, 70)
@@ -328,10 +296,7 @@ local function createCommandButton(cmdName, cmdDesc, cmdUsage)
     CommandsPage.CanvasSize = UDim2.new(0, 0, 0, CmdList.AbsoluteContentSize.Y + 20)
 end
 
--- ====================================
 -- TAB SWITCHING
--- ====================================
-
 local currentTab = "Home"
 
 local function switchTab(tabName)
@@ -339,4 +304,18 @@ local function switchTab(tabName)
         HomePage.Visible = true
         CommandsPage.Visible = false
         HomeTab.BackgroundColor3 = Color3.fromRGB(60, 120, 200)
-        HomeTab.
+        HomeTab.TextColor3 = Color3.fromRGB(255, 255, 255)
+        CommandsTab.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+        CommandsTab.TextColor3 = Color3.fromRGB(200, 200, 200)
+    elseif tabName == "Commands" then
+        HomePage.Visible = false
+        CommandsPage.Visible = true
+        CommandsTab.BackgroundColor3 = Color3.fromRGB(60, 120, 200)
+        CommandsTab.TextColor3 = Color3.fromRGB(255, 255, 255)
+        HomeTab.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+        HomeTab.TextColor3 = Color3.fromRGB(200, 200, 200)
+    end
+    currentTab = tabName
+end
+
+HomeTab.MouseButton1Click:Connect(function()
