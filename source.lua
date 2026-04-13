@@ -1,411 +1,349 @@
--- ROX ADMIN v3.0 - COMPLETE VERSION
--- 50+ Commands with Buttons
+-- Universal Admin System v1.0
+-- Schwebender Ball UI inspiriert von Infinite Yield
 
 local Players = game:GetService("Players")
-local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
+local TweenService = game:GetService("TweenService")
+local RunService = game:GetService("RunService")
+
 local LocalPlayer = Players.LocalPlayer
+local Mouse = LocalPlayer:GetMouse()
 
--- Notification
-game.StarterGui:SetCore("SendNotification", {
-    Title = "✅ Rox Admin";
-    Text = "Erfolgreich geladen!";
-    Duration = 3;
-})
-
--- ScreenGui Setup
-local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Name = "RoxAdminV3"
-ScreenGui.ResetOnSpawn = false
-ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-
-pcall(function()
-    ScreenGui.Parent = game.CoreGui
-end)
-
-if ScreenGui.Parent ~= game.CoreGui then
-    ScreenGui.Parent = LocalPlayer.PlayerGui
-end
-
--- ==========================================
--- RUNDER TOGGLE BUTTON (LINKS MITTIG)
--- ==========================================
-
-local ToggleBtn = Instance.new("TextButton")
-ToggleBtn.Size = UDim2.new(0, 65, 0, 65)
-ToggleBtn.Position = UDim2.new(0, 15, 0.5, -32)
-ToggleBtn.BackgroundColor3 = Color3.fromRGB(80, 80, 255)
-ToggleBtn.Text = "R"
-ToggleBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-ToggleBtn.TextSize = 28
-ToggleBtn.Font = Enum.Font.GothamBold
-ToggleBtn.BorderSizePixel = 0
-ToggleBtn.Active = true
-ToggleBtn.Draggable = true
-ToggleBtn.Parent = ScreenGui
-
-local BtnCorner = Instance.new("UICorner")
-BtnCorner.CornerRadius = UDim.new(1, 0)
-BtnCorner.Parent = ToggleBtn
-
-local BtnStroke = Instance.new("UIStroke")
-BtnStroke.Color = Color3.fromRGB(255, 255, 255)
-BtnStroke.Thickness = 3
-BtnStroke.Parent = ToggleBtn
-
--- ==========================================
--- HAUPT GUI FRAME
--- ==========================================
-
-local Main = Instance.new("Frame")
-Main.Size = UDim2.new(0, 700, 0, 500)
-Main.Position = UDim2.new(0.5, -350, 0.5, -250)
-Main.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
-Main.BorderSizePixel = 0
-Main.Visible = false
-Main.Active = true
-Main.Parent = ScreenGui
-
-local MainCorner = Instance.new("UICorner")
-MainCorner.CornerRadius = UDim.new(0, 12)
-MainCorner.Parent = Main
-
-local MainStroke = Instance.new("UIStroke")
-MainStroke.Color = Color3.fromRGB(80, 80, 80)
-MainStroke.Thickness = 2
-MainStroke.Parent = Main
-
--- ==========================================
--- TITLE BAR
--- ==========================================
-
-local TitleBar = Instance.new("Frame")
-TitleBar.Size = UDim2.new(1, 0, 0, 50)
-TitleBar.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
-TitleBar.BorderSizePixel = 0
-TitleBar.Parent = Main
-
-local TitleCorner = Instance.new("UICorner")
-TitleCorner.CornerRadius = UDim.new(0, 12)
-TitleCorner.Parent = TitleBar
-
-local TitleFix = Instance.new("Frame")
-TitleFix.Size = UDim2.new(1, 0, 0, 12)
-TitleFix.Position = UDim2.new(0, 0, 1, -12)
-TitleFix.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
-TitleFix.BorderSizePixel = 0
-TitleFix.Parent = TitleBar
-
-local Title = Instance.new("TextLabel")
-Title.Size = UDim2.new(1, -60, 1, 0)
-Title.Position = UDim2.new(0, 15, 0, 0)
-Title.BackgroundTransparency = 1
-Title.Text = "🔧 ROX ADMIN V3.0"
-Title.TextColor3 = Color3.fromRGB(255, 255, 255)
-Title.TextSize = 22
-Title.Font = Enum.Font.GothamBold
-Title.TextXAlignment = Enum.TextXAlignment.Left
-Title.Parent = TitleBar
-
--- Drag functionality
-local dragging, dragInput, dragStart, startPos
-
-TitleBar.InputBegan:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-        dragging = true
-        dragStart = input.Position
-        startPos = Main.Position
-        
-        input.Changed:Connect(function()
-            if input.UserInputState == Enum.UserInputState.End then
-                dragging = false
-            end
-        end)
-    end
-end)
-
-TitleBar.InputChanged:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
-        dragInput = input
-    end
-end)
-
-UserInputService.InputChanged:Connect(function(input)
-    if input == dragInput and dragging then
-        local delta = input.Position - dragStart
-        Main.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
-    end
-end)
-
-local CloseBtn = Instance.new("TextButton")
-CloseBtn.Size = UDim2.new(0, 40, 0, 40)
-CloseBtn.Position = UDim2.new(1, -45, 0, 5)
-CloseBtn.BackgroundColor3 = Color3.fromRGB(255, 60, 60)
-CloseBtn.Text = "X"
-CloseBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-CloseBtn.TextSize = 22
-CloseBtn.Font = Enum.Font.GothamBold
-CloseBtn.BorderSizePixel = 0
-CloseBtn.Parent = TitleBar
-
-local CloseCorner = Instance.new("UICorner")
-CloseCorner.CornerRadius = UDim.new(1, 0)
-CloseCorner.Parent = CloseBtn
-
--- ==========================================
--- TAB SYSTEM
--- ==========================================
-
-local TabContainer = Instance.new("Frame")
-TabContainer.Size = UDim2.new(1, 0, 0, 45)
-TabContainer.Position = UDim2.new(0, 0, 0, 50)
-TabContainer.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-TabContainer.BorderSizePixel = 0
-TabContainer.Parent = Main
-
-local TabList = Instance.new("UIListLayout")
-TabList.FillDirection = Enum.FillDirection.Horizontal
-TabList.SortOrder = Enum.SortOrder.LayoutOrder
-TabList.Padding = UDim.new(0, 2)
-TabList.Parent = TabContainer
-
-local function createTab(name, icon, order)
-    local Tab = Instance.new("TextButton")
-    Tab.Size = UDim2.new(0, 138, 1, 0)
-    Tab.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
-    Tab.Text = icon .. " " .. name
-    Tab.TextColor3 = Color3.fromRGB(200, 200, 200)
-    Tab.TextSize = 15
-    Tab.Font = Enum.Font.GothamBold
-    Tab.BorderSizePixel = 0
-    Tab.LayoutOrder = order
-    Tab.Parent = TabContainer
-    return Tab
-end
-
-local PlayerTab = createTab("Player", "👤", 1)
-local VisualTab = createTab("Visual", "👁️", 2)
-local TeleportTab = createTab("Teleport", "📍", 3)
-local MiscTab = createTab("Misc", "⚙️", 4)
-local ScriptsTab = createTab("Scripts", "📜", 5)
-
--- ==========================================
--- PAGE CONTAINER
--- ==========================================
-
-local PageContainer = Instance.new("Frame")
-PageContainer.Size = UDim2.new(1, 0, 1, -95)
-PageContainer.Position = UDim2.new(0, 0, 0, 95)
-PageContainer.BackgroundTransparency = 1
-PageContainer.Parent = Main
-
-local function createPage()
-    local Page = Instance.new("ScrollingFrame")
-    Page.Size = UDim2.new(1, 0, 1, 0)
-    Page.BackgroundTransparency = 1
-    Page.BorderSizePixel = 0
-    Page.ScrollBarThickness = 6
-    Page.ScrollBarImageColor3 = Color3.fromRGB(80, 80, 80)
-    Page.Visible = false
-    Page.Parent = PageContainer
-    
-    local Grid = Instance.new("UIGridLayout")
-    Grid.CellSize = UDim2.new(0, 160, 0, 45)
-    Grid.CellPadding = UDim2.new(0, 8, 0, 8)
-    Grid.SortOrder = Enum.SortOrder.LayoutOrder
-    Grid.Parent = Page
-    
-    local Padding = Instance.new("UIPadding")
-    Padding.PaddingTop = UDim.new(0, 10)
-    Padding.PaddingLeft = UDim.new(0, 10)
-    Padding.PaddingRight = UDim.new(0, 10)
-    Padding.PaddingBottom = UDim.new(0, 10)
-    Padding.Parent = Page
-    
-    return Page
-end
-
-local PlayerPage = createPage()
-local VisualPage = createPage()
-local TeleportPage = createPage()
-local MiscPage = createPage()
-local ScriptsPage = createPage()
-
-PlayerPage.Visible = true
-
--- ==========================================
--- BUTTON CREATOR
--- ==========================================
-
-local function createButton(parent, text, color)
-    local Btn = Instance.new("TextButton")
-    Btn.Size = UDim2.new(1, 0, 1, 0)
-    Btn.BackgroundColor3 = color or Color3.fromRGB(50, 50, 50)
-    Btn.Text = text
-    Btn.TextColor3 = Color3.fromRGB(255, 255, 255)
-    Btn.TextSize = 14
-    Btn.Font = Enum.Font.GothamSemibold
-    Btn.BorderSizePixel = 0
-    Btn.Parent = parent
-    
-    local Corner = Instance.new("UICorner")
-    Corner.CornerRadius = UDim.new(0, 8)
-    Corner.Parent = Btn
-    
-    local Stroke = Instance.new("UIStroke")
-    Stroke.Color = Color3.fromRGB(100, 100, 100)
-    Stroke.Thickness = 1.5
-    Stroke.Transparency = 0.7
-    Stroke.Parent = Btn
-    
-    return Btn
-end
-
--- ==========================================
--- GLOBAL VARIABLES
--- ==========================================
-
-local Loops = {
-    fly = nil,
-    noclip = nil,
-    esp = nil,
-    speed = nil,
-    jump = nil,
-    infJump = nil,
-    autoFarm = nil
+-- Konfiguration
+local CONFIG = {
+    PREFIX = ";",
+    BALL_SIZE = 60,
+    BALL_COLOR = Color3.fromRGB(0, 170, 255),
+    ANIMATION_SPEED = 0.3
 }
 
-local Settings = {
-    flySpeed = 50,
-    walkSpeed = 16,
-    jumpPower = 50,
-    espEnabled = false,
-    noclipEnabled = false
-}
-
-local ESPObjects = {}
-
--- ==========================================
--- UTILITY FUNCTIONS
--- ==========================================
-
-local function notify(title, text)
-    game.StarterGui:SetCore("SendNotification", {
-        Title = title;
-        Text = text;
-        Duration = 3;
-    })
-end
-
-local function getRoot()
-    return LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
-end
-
-local function getHumanoid()
-    return LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid")
-end
-
--- ==========================================
--- PLAYER COMMANDS
--- ==========================================
-
--- WalkSpeed
-local speedBtn = createButton(PlayerPage, "🏃 Speed Boost", Color3.fromRGB(60, 120, 220))
-speedBtn.MouseButton1Click:Connect(function()
-    local hum = getHumanoid()
-    if hum then
-        hum.WalkSpeed = 100
-        notify("Speed", "WalkSpeed = 100")
-    end
-end)
-
--- Reset Speed
-local resetSpeedBtn = createButton(PlayerPage, "↩️ Reset Speed", Color3.fromRGB(80, 80, 80))
-resetSpeedBtn.MouseButton1Click:Connect(function()
-    local hum = getHumanoid()
-    if hum then
-        hum.WalkSpeed = 16
-        notify("Speed", "WalkSpeed zurückgesetzt")
-    end
-end)
-
--- Jump Power
-local jumpBtn = createButton(PlayerPage, "⬆️ Super Jump", Color3.fromRGB(60, 120, 220))
-jumpBtn.MouseButton1Click:Connect(function()
-    local hum = getHumanoid()
-    if hum then
-        hum.JumpPower = 120
-        notify("Jump", "JumpPower = 120")
-    end
-end)
-
--- Infinite Jump
-local infJumpActive = false
-local infJumpBtn = createButton(PlayerPage, "♾️ Infinite Jump", Color3.fromRGB(100, 60, 220))
-infJumpBtn.MouseButton1Click:Connect(function()
-    infJumpActive = not infJumpActive
+-- UI Erstellung
+local function createUI()
+    local ScreenGui = Instance.new("ScreenGui")
+    ScreenGui.Name = "UniversalAdmin"
+    ScreenGui.ResetOnSpawn = false
+    ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
     
-    if infJumpActive then
-        infJumpBtn.BackgroundColor3 = Color3.fromRGB(60, 220, 100)
-        notify("Infinite Jump", "Aktiviert")
-        
-        Loops.infJump = UserInputService.JumpRequest:Connect(function()
-            if infJumpActive and getHumanoid() then
-                getHumanoid():ChangeState(Enum.HumanoidStateType.Jumping)
+    -- Schwebender Ball
+    local Ball = Instance.new("Frame")
+    Ball.Name = "FloatingBall"
+    Ball.Size = UDim2.new(0, CONFIG.BALL_SIZE, 0, CONFIG.BALL_SIZE)
+    Ball.Position = UDim2.new(0.5, 0, 0.1, 0)
+    Ball.AnchorPoint = Vector2.new(0.5, 0.5)
+    Ball.BackgroundColor3 = CONFIG.BALL_COLOR
+    Ball.BorderSizePixel = 0
+    Ball.Active = true
+    Ball.Draggable = true
+    Ball.Parent = ScreenGui
+    
+    local BallCorner = Instance.new("UICorner")
+    BallCorner.CornerRadius = UDim.new(1, 0)
+    BallCorner.Parent = Ball
+    
+    -- Glow Effekt
+    local Glow = Instance.new("ImageLabel")
+    Glow.Name = "Glow"
+    Glow.Size = UDim2.new(1.4, 0, 1.4, 0)
+    Glow.Position = UDim2.new(0.5, 0, 0.5, 0)
+    Glow.AnchorPoint = Vector2.new(0.5, 0.5)
+    Glow.BackgroundTransparency = 1
+    Glow.Image = "rbxasset://textures/ui/GuiImagePlaceholder.png"
+    Glow.ImageColor3 = CONFIG.BALL_COLOR
+    Glow.ImageTransparency = 0.7
+    Glow.Parent = Ball
+    
+    -- Icon
+    local Icon = Instance.new("TextLabel")
+    Icon.Size = UDim2.new(1, 0, 1, 0)
+    Icon.BackgroundTransparency = 1
+    Icon.Text = "⚡"
+    Icon.TextColor3 = Color3.new(1, 1, 1)
+    Icon.TextSize = 32
+    Icon.Font = Enum.Font.GothamBold
+    Icon.Parent = Ball
+    
+    -- Command Window
+    local CommandWindow = Instance.new("Frame")
+    CommandWindow.Name = "CommandWindow"
+    CommandWindow.Size = UDim2.new(0, 450, 0, 350)
+    CommandWindow.Position = UDim2.new(0.5, 0, 0.5, 0)
+    CommandWindow.AnchorPoint = Vector2.new(0.5, 0.5)
+    CommandWindow.BackgroundColor3 = Color3.fromRGB(25, 25, 30)
+    CommandWindow.BorderSizePixel = 0
+    CommandWindow.Visible = false
+    CommandWindow.Parent = ScreenGui
+    
+    local WindowCorner = Instance.new("UICorner")
+    WindowCorner.CornerRadius = UDim.new(0, 10)
+    WindowCorner.Parent = CommandWindow
+    
+    -- Titlebar
+    local TitleBar = Instance.new("Frame")
+    TitleBar.Name = "TitleBar"
+    TitleBar.Size = UDim2.new(1, 0, 0, 40)
+    TitleBar.BackgroundColor3 = CONFIG.BALL_COLOR
+    TitleBar.BorderSizePixel = 0
+    TitleBar.Parent = CommandWindow
+    
+    local TitleCorner = Instance.new("UICorner")
+    TitleCorner.CornerRadius = UDim.new(0, 10)
+    TitleCorner.Parent = TitleBar
+    
+    local TitleBottomCover = Instance.new("Frame")
+    TitleBottomCover.Size = UDim2.new(1, 0, 0, 10)
+    TitleBottomCover.Position = UDim2.new(0, 0, 1, -10)
+    TitleBottomCover.BackgroundColor3 = CONFIG.BALL_COLOR
+    TitleBottomCover.BorderSizePixel = 0
+    TitleBottomCover.Parent = TitleBar
+    
+    local Title = Instance.new("TextLabel")
+    Title.Size = UDim2.new(1, -80, 1, 0)
+    Title.Position = UDim2.new(0, 10, 0, 0)
+    Title.BackgroundTransparency = 1
+    Title.Text = "Universal Admin"
+    Title.TextColor3 = Color3.new(1, 1, 1)
+    Title.TextSize = 18
+    Title.Font = Enum.Font.GothamBold
+    Title.TextXAlignment = Enum.TextXAlignment.Left
+    Title.Parent = TitleBar
+    
+    -- Close Button
+    local CloseButton = Instance.new("TextButton")
+    CloseButton.Name = "CloseButton"
+    CloseButton.Size = UDim2.new(0, 30, 0, 30)
+    CloseButton.Position = UDim2.new(1, -35, 0.5, 0)
+    CloseButton.AnchorPoint = Vector2.new(0, 0.5)
+    CloseButton.BackgroundColor3 = Color3.fromRGB(255, 60, 60)
+    CloseButton.Text = "×"
+    CloseButton.TextColor3 = Color3.new(1, 1, 1)
+    CloseButton.TextSize = 24
+    CloseButton.Font = Enum.Font.GothamBold
+    CloseButton.BorderSizePixel = 0
+    CloseButton.Parent = TitleBar
+    
+    local CloseCorner = Instance.new("UICorner")
+    CloseCorner.CornerRadius = UDim.new(1, 0)
+    CloseCorner.Parent = CloseButton
+    
+    -- Command Input
+    local CommandInput = Instance.new("TextBox")
+    CommandInput.Name = "CommandInput"
+    CommandInput.Size = UDim2.new(1, -20, 0, 35)
+    CommandInput.Position = UDim2.new(0, 10, 0, 50)
+    CommandInput.BackgroundColor3 = Color3.fromRGB(35, 35, 40)
+    CommandInput.BorderSizePixel = 0
+    CommandInput.PlaceholderText = "Befehl eingeben (z.B. ;fly, ;speed 100)..."
+    CommandInput.PlaceholderColor3 = Color3.fromRGB(150, 150, 150)
+    CommandInput.Text = ""
+    CommandInput.TextColor3 = Color3.new(1, 1, 1)
+    CommandInput.TextSize = 14
+    CommandInput.Font = Enum.Font.Gotham
+    CommandInput.TextXAlignment = Enum.TextXAlignment.Left
+    CommandInput.ClearTextOnFocus = false
+    CommandInput.Parent = CommandWindow
+    
+    local InputCorner = Instance.new("UICorner")
+    InputCorner.CornerRadius = UDim.new(0, 6)
+    InputCorner.Parent = CommandInput
+    
+    -- Output ScrollingFrame
+    local Output = Instance.new("ScrollingFrame")
+    Output.Name = "Output"
+    Output.Size = UDim2.new(1, -20, 1, -100)
+    Output.Position = UDim2.new(0, 10, 0, 95)
+    Output.BackgroundColor3 = Color3.fromRGB(20, 20, 25)
+    Output.BorderSizePixel = 0
+    Output.ScrollBarThickness = 4
+    Output.CanvasSize = UDim2.new(0, 0, 0, 0)
+    Output.AutomaticCanvasSize = Enum.AutomaticSize.Y
+    Output.Parent = CommandWindow
+    
+    local OutputCorner = Instance.new("UICorner")
+    OutputCorner.CornerRadius = UDim.new(0, 6)
+    OutputCorner.Parent = Output
+    
+    local OutputList = Instance.new("UIListLayout")
+    OutputList.Padding = UDim.new(0, 5)
+    OutputList.Parent = Output
+    
+    local OutputPadding = Instance.new("UIPadding")
+    OutputPadding.PaddingLeft = UDim.new(0, 10)
+    OutputPadding.PaddingRight = UDim.new(0, 10)
+    OutputPadding.PaddingTop = UDim.new(0, 10)
+    OutputPadding.PaddingBottom = UDim.new(0, 10)
+    OutputPadding.Parent = Output
+    
+    ScreenGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
+    
+    return ScreenGui, Ball, CommandWindow, CommandInput, Output, CloseButton
+end
+
+-- Logging System
+local function addLog(outputFrame, message, color)
+    color = color or Color3.fromRGB(255, 255, 255)
+    
+    local LogLabel = Instance.new("TextLabel")
+    LogLabel.Size = UDim2.new(1, 0, 0, 20)
+    LogLabel.BackgroundTransparency = 1
+    LogLabel.Text = "[" .. os.date("%H:%M:%S") .. "] " .. message
+    LogLabel.TextColor3 = color
+    LogLabel.TextSize = 13
+    LogLabel.Font = Enum.Font.Code
+    LogLabel.TextXAlignment = Enum.TextXAlignment.Left
+    LogLabel.TextWrapped = true
+    LogLabel.AutomaticSize = Enum.AutomaticSize.Y
+    LogLabel.Parent = outputFrame
+end
+
+-- Admin Commands
+local Commands = {}
+local FlyEnabled = false
+local NoClipEnabled = false
+local FlySpeed = 50
+
+Commands.fly = {
+    Description = "Aktiviert Flug-Modus",
+    Execute = function(args, output)
+        FlyEnabled = not FlyEnabled
+        if FlyEnabled then
+            local character = LocalPlayer.Character
+            local humanoid = character and character:FindFirstChildOfClass("Humanoid")
+            local rootPart = humanoid and humanoid.RootPart
+            
+            if rootPart then
+                local BV = Instance.new("BodyVelocity")
+                BV.Name = "FlyVelocity"
+                BV.MaxForce = Vector3.new(9e9, 9e9, 9e9)
+                BV.Velocity = Vector3.new(0, 0, 0)
+                BV.Parent = rootPart
+                
+                local BG = Instance.new("BodyGyro")
+                BG.Name = "FlyGyro"
+                BG.MaxTorque = Vector3.new(9e9, 9e9, 9e9)
+                BG.CFrame = rootPart.CFrame
+                BG.Parent = rootPart
+                
+                addLog(output, "Flug aktiviert! WASD zum Fliegen, Q/E für hoch/runter", Color3.fromRGB(0, 255, 0))
             end
-        end)
-    else
-        infJumpBtn.BackgroundColor3 = Color3.fromRGB(100, 60, 220)
-        notify("Infinite Jump", "Deaktiviert")
-        if Loops.infJump then
-            Loops.infJump:Disconnect()
+        else
+            local character = LocalPlayer.Character
+            if character then
+                local rootPart = character:FindFirstChild("HumanoidRootPart")
+                if rootPart then
+                    if rootPart:FindFirstChild("FlyVelocity") then rootPart.FlyVelocity:Destroy() end
+                    if rootPart:FindFirstChild("FlyGyro") then rootPart.FlyGyro:Destroy() end
+                end
+            end
+            addLog(output, "Flug deaktiviert", Color3.fromRGB(255, 150, 0))
         end
     end
-end)
+}
 
--- God Mode
-local godBtn = createButton(PlayerPage, "🛡️ God Mode", Color3.fromRGB(220, 180, 60))
-godBtn.MouseButton1Click:Connect(function()
-    local hum = getHumanoid()
-    if hum then
-        hum.MaxHealth = math.huge
-        hum.Health = math.huge
-        notify("God Mode", "Aktiviert")
+Commands.speed = {
+    Description = "Setzt Laufgeschwindigkeit (Standard: 16)",
+    Execute = function(args, output)
+        local speed = tonumber(args[1]) or 16
+        local character = LocalPlayer.Character
+        local humanoid = character and character:FindFirstChildOfClass("Humanoid")
+        
+        if humanoid then
+            humanoid.WalkSpeed = speed
+            addLog(output, "Geschwindigkeit auf " .. speed .. " gesetzt", Color3.fromRGB(0, 255, 0))
+        end
     end
-end)
+}
 
--- Fly
-local flyActive = false
-local flyBtn = createButton(PlayerPage, "✈️ Fly", Color3.fromRGB(60, 180, 220))
-flyBtn.MouseButton1Click:Connect(function()
-    flyActive = not flyActive
-    
-    if flyActive then
-        flyBtn.BackgroundColor3 = Color3.fromRGB(60, 220, 100)
-        notify("Fly", "Aktiviert (WASD + Space/Shift)")
+Commands.jump = {
+    Description = "Setzt Sprunghöhe (Standard: 50)",
+    Execute = function(args, output)
+        local power = tonumber(args[1]) or 50
+        local character = LocalPlayer.Character
+        local humanoid = character and character:FindFirstChildOfClass("Humanoid")
         
-        local root = getRoot()
-        if not root then return end
+        if humanoid then
+            humanoid.JumpPower = power
+            addLog(output, "Sprungkraft auf " .. power .. " gesetzt", Color3.fromRGB(0, 255, 0))
+        end
+    end
+}
+
+Commands.noclip = {
+    Description = "Durchgehen durch Wände",
+    Execute = function(args, output)
+        NoClipEnabled = not NoClipEnabled
+        addLog(output, "NoClip " .. (NoClipEnabled and "aktiviert" or "deaktiviert"), 
+               NoClipEnabled and Color3.fromRGB(0, 255, 0) or Color3.fromRGB(255, 150, 0))
+    end
+}
+
+Commands.god = {
+    Description = "Unbegrenzte Gesundheit",
+    Execute = function(args, output)
+        local character = LocalPlayer.Character
+        local humanoid = character and character:FindFirstChildOfClass("Humanoid")
         
-        local bg = Instance.new("BodyGyro", root)
-        bg.MaxTorque = Vector3.new(9e9, 9e9, 9e9)
-        bg.P = 9e4
+        if humanoid then
+            humanoid.MaxHealth = math.huge
+            humanoid.Health = math.huge
+            addLog(output, "God-Modus aktiviert", Color3.fromRGB(255, 215, 0))
+        end
+    end
+}
+
+Commands.tp = {
+    Description = "Teleportiert zu Spieler (;tp Spielername)",
+    Execute = function(args, output)
+        if not args[1] then
+            addLog(output, "Fehler: Spielername fehlt", Color3.fromRGB(255, 0, 0))
+            return
+        end
         
-        local bv = Instance.new("BodyVelocity", root)
-        bv.MaxForce = Vector3.new(9e9, 9e9, 9e9)
-        bv.Velocity = Vector3.new(0, 0, 0)
+        local targetName = args[1]:lower()
+        local target = nil
         
-        Loops.fly = RunService.Heartbeat:Connect(function()
-            if not flyActive then return end
-            
-            local root = getRoot()
-            if not root then return end
-            
-            local cam = workspace.CurrentCamera
-            local speed = 50
-            
-            bg.CFrame = cam.CFrame
-            
-            local velocity = Vector3.new(0, 0, 0)
-            
-            if UserInputService:IsKeyDown(Enum.KeyCode
+        for _, player in pairs(Players:GetPlayers()) do
+            if player.Name:lower():sub(1, #targetName) == targetName then
+                target = player
+                break
+            end
+        end
+        
+        if target and target.Character and target.Character:FindFirstChild("HumanoidRootPart") then
+            local character = LocalPlayer.Character
+            if character and character:FindFirstChild("HumanoidRootPart") then
+                character.HumanoidRootPart.CFrame = target.Character.HumanoidRootPart.CFrame
+                addLog(output, "Teleportiert zu " .. target.Name, Color3.fromRGB(0, 255, 0))
+            end
+        else
+            addLog(output, "Spieler nicht gefunden", Color3.fromRGB(255, 0, 0))
+        end
+    end
+}
+
+Commands.respawn = {
+    Description = "Respawnt deinen Charakter",
+    Execute = function(args, output)
+        local character = LocalPlayer.Character
+        if character then
+            character:BreakJoints()
+            addLog(output, "Respawning...", Color3.fromRGB(255, 255, 0))
+        end
+    end
+}
+
+Commands.cmds = {
+    Description = "Zeigt alle Befehle",
+    Execute = function(args, output)
+        addLog(output, "=== Verfügbare Befehle ===", Color3.fromRGB(0, 170, 255))
+        for name, cmd in pairs(Commands) do
+            addLog(output, CONFIG.PREFIX .. name .. " - " .. cmd.Description, Color3.fromRGB(200, 200, 200))
+        end
+    end
+}
+
+Commands.clear = {
+    Description = "Löscht Output",
+    Execute = function(args, output)
+        for _, child in pairs(output:GetChildren()) do
+            if child:IsA("TextLabel") then
+                child
