@@ -1,34 +1,41 @@
 -- ROX ADMIN v2.0
--- Runder Toggle-Button Style
+print("Loading Rox Admin...")
 
 local Players = game:GetService("Players")
 local UserInputService = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
-local TweenService = game:GetService("TweenService")
 local LocalPlayer = Players.LocalPlayer
 
--- Notification
+wait(0.5)
+
 game.StarterGui:SetCore("SendNotification", {
     Title = "Rox Admin";
-    Text = "Geladen! Klicke den runden Button";
-    Duration = 5;
+    Text = "Willkommen " .. LocalPlayer.Name;
+    Duration = 3;
 })
 
--- ScreenGui
 local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Name = "RoxAdminGUI"
+ScreenGui.Name = "RoxAdmin"
 ScreenGui.ResetOnSpawn = false
-ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-ScreenGui.Parent = game.CoreGui
 
--- RUNDER TOGGLE BUTTON
-local ToggleButton = Instance.new("ImageButton")
-ToggleButton.Name = "ToggleButton"
-ToggleButton.Size = UDim2.new(0, 60, 0, 60)
-ToggleButton.Position = UDim2.new(0, 20, 0.5, -30)
-ToggleButton.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+pcall(function()
+    ScreenGui.Parent = game.CoreGui
+end)
+
+if ScreenGui.Parent ~= game.CoreGui then
+    ScreenGui.Parent = LocalPlayer.PlayerGui
+end
+
+-- RUNDER BUTTON
+local ToggleButton = Instance.new("TextButton")
+ToggleButton.Size = UDim2.new(0, 70, 0, 70)
+ToggleButton.Position = UDim2.new(0, 10, 0.5, -35)
+ToggleButton.BackgroundColor3 = Color3.fromRGB(60, 60, 220)
+ToggleButton.Text = "ROX"
+ToggleButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+ToggleButton.TextSize = 18
+ToggleButton.Font = Enum.Font.GothamBold
 ToggleButton.BorderSizePixel = 0
-ToggleButton.Image = ""
 ToggleButton.Active = true
 ToggleButton.Draggable = true
 ToggleButton.Parent = ScreenGui
@@ -37,83 +44,63 @@ local ButtonCorner = Instance.new("UICorner")
 ButtonCorner.CornerRadius = UDim.new(1, 0)
 ButtonCorner.Parent = ToggleButton
 
-local Gradient = Instance.new("UIGradient")
-Gradient.Color = ColorSequence.new{
-    ColorSequenceKeypoint.new(0, Color3.fromRGB(100, 50, 200)),
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(50, 150, 255))
-}
-Gradient.Rotation = 45
-Gradient.Parent = ToggleButton
+local ButtonStroke = Instance.new("UIStroke")
+ButtonStroke.Color = Color3.fromRGB(255, 255, 255)
+ButtonStroke.Thickness = 3
+ButtonStroke.Parent = ToggleButton
 
-local ButtonText = Instance.new("TextLabel")
-ButtonText.Size = UDim2.new(1, 0, 1, 0)
-ButtonText.BackgroundTransparency = 1
-ButtonText.Text = "ROX"
-ButtonText.TextColor3 = Color3.fromRGB(255, 255, 255)
-ButtonText.TextSize = 16
-ButtonText.Font = Enum.Font.GothamBold
-ButtonText.Parent = ToggleButton
-
-local Stroke = Instance.new("UIStroke")
-Stroke.Color = Color3.fromRGB(255, 255, 255)
-Stroke.Thickness = 2
-Stroke.Transparency = 0.5
-Stroke.Parent = ToggleButton
-
--- HAUPT-GUI
+-- MAIN FRAME
 local MainFrame = Instance.new("Frame")
-MainFrame.Name = "MainFrame"
-MainFrame.Size = UDim2.new(0, 550, 0, 400)
-MainFrame.Position = UDim2.new(0.5, -275, 0.5, -200)
+MainFrame.Size = UDim2.new(0, 600, 0, 450)
+MainFrame.Position = UDim2.new(0.5, -300, 0.5, -225)
 MainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 MainFrame.BorderSizePixel = 0
 MainFrame.Visible = false
-MainFrame.Active = true
 MainFrame.Parent = ScreenGui
 
 local MainCorner = Instance.new("UICorner")
-MainCorner.CornerRadius = UDim.new(0, 12)
+MainCorner.CornerRadius = UDim.new(0, 10)
 MainCorner.Parent = MainFrame
 
 local MainStroke = Instance.new("UIStroke")
-MainStroke.Color = Color3.fromRGB(70, 70, 70)
+MainStroke.Color = Color3.fromRGB(80, 80, 80)
 MainStroke.Thickness = 2
 MainStroke.Parent = MainFrame
 
 -- TITLE BAR
 local TitleBar = Instance.new("Frame")
-TitleBar.Size = UDim2.new(1, 0, 0, 45)
+TitleBar.Size = UDim2.new(1, 0, 0, 50)
 TitleBar.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
 TitleBar.BorderSizePixel = 0
 TitleBar.Parent = MainFrame
 
 local TitleCorner = Instance.new("UICorner")
-TitleCorner.CornerRadius = UDim.new(0, 12)
+TitleCorner.CornerRadius = UDim.new(0, 10)
 TitleCorner.Parent = TitleBar
 
 local TitleFix = Instance.new("Frame")
-TitleFix.Size = UDim2.new(1, 0, 0, 12)
-TitleFix.Position = UDim2.new(0, 0, 1, -12)
+TitleFix.Size = UDim2.new(1, 0, 0, 10)
+TitleFix.Position = UDim2.new(0, 0, 1, -10)
 TitleFix.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
 TitleFix.BorderSizePixel = 0
 TitleFix.Parent = TitleBar
 
 local Title = Instance.new("TextLabel")
-Title.Size = UDim2.new(1, -100, 1, 0)
+Title.Size = UDim2.new(1, -60, 1, 0)
 Title.Position = UDim2.new(0, 15, 0, 0)
 Title.BackgroundTransparency = 1
 Title.Text = "🔧 ROX ADMIN"
 Title.TextColor3 = Color3.fromRGB(255, 255, 255)
-Title.TextSize = 20
+Title.TextSize = 22
 Title.Font = Enum.Font.GothamBold
 Title.TextXAlignment = Enum.TextXAlignment.Left
 Title.Parent = TitleBar
 
 local CloseBtn = Instance.new("TextButton")
-CloseBtn.Size = UDim2.new(0, 35, 0, 35)
-CloseBtn.Position = UDim2.new(1, -40, 0, 5)
-CloseBtn.BackgroundColor3 = Color3.fromRGB(255, 60, 60)
-CloseBtn.Text = "✕"
+CloseBtn.Size = UDim2.new(0, 40, 0, 40)
+CloseBtn.Position = UDim2.new(1, -45, 0, 5)
+CloseBtn.BackgroundColor3 = Color3.fromRGB(220, 50, 50)
+CloseBtn.Text = "X"
 CloseBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 CloseBtn.TextSize = 20
 CloseBtn.Font = Enum.Font.GothamBold
@@ -124,198 +111,218 @@ local CloseCorner = Instance.new("UICorner")
 CloseCorner.CornerRadius = UDim.new(1, 0)
 CloseCorner.Parent = CloseBtn
 
--- TAB BUTTONS
-local TabContainer = Instance.new("Frame")
-TabContainer.Size = UDim2.new(1, -20, 0, 35)
-TabContainer.Position = UDim2.new(0, 10, 0, 55)
-TabContainer.BackgroundTransparency = 1
-TabContainer.Parent = MainFrame
+-- TABS
+local TabBar = Instance.new("Frame")
+TabBar.Size = UDim2.new(1, -20, 0, 40)
+TabBar.Position = UDim2.new(0, 10, 0, 60)
+TabBar.BackgroundTransparency = 1
+TabBar.Parent = MainFrame
 
-local function createTab(name, position)
-    local Tab = Instance.new("TextButton")
-    Tab.Size = UDim2.new(0.48, 0, 1, 0)
-    Tab.Position = UDim2.new(position, 0, 0, 0)
-    Tab.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
-    Tab.Text = name
-    Tab.TextColor3 = Color3.fromRGB(200, 200, 200)
-    Tab.TextSize = 16
-    Tab.Font = Enum.Font.GothamSemibold
-    Tab.BorderSizePixel = 0
-    Tab.Parent = TabContainer
-    
-    local Corner = Instance.new("UICorner")
-    Corner.CornerRadius = UDim.new(0, 8)
-    Corner.Parent = Tab
-    
-    return Tab
-end
+local HomeTab = Instance.new("TextButton")
+HomeTab.Size = UDim2.new(0.48, 0, 1, 0)
+HomeTab.Position = UDim2.new(0, 0, 0, 0)
+HomeTab.BackgroundColor3 = Color3.fromRGB(60, 120, 220)
+HomeTab.Text = "🏠 Home"
+HomeTab.TextColor3 = Color3.fromRGB(255, 255, 255)
+HomeTab.TextSize = 16
+HomeTab.Font = Enum.Font.GothamBold
+HomeTab.BorderSizePixel = 0
+HomeTab.Parent = TabBar
 
-local HomeTab = createTab("🏠 Home", 0)
-local CommandsTab = createTab("📋 Commands", 0.52)
+local HomeCorner = Instance.new("UICorner")
+HomeCorner.CornerRadius = UDim.new(0, 8)
+HomeCorner.Parent = HomeTab
+
+local CmdTab = Instance.new("TextButton")
+CmdTab.Size = UDim2.new(0.48, 0, 1, 0)
+CmdTab.Position = UDim2.new(0.52, 0, 0, 0)
+CmdTab.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+CmdTab.Text = "📋 Commands"
+CmdTab.TextColor3 = Color3.fromRGB(200, 200, 200)
+CmdTab.TextSize = 16
+CmdTab.Font = Enum.Font.GothamBold
+CmdTab.BorderSizePixel = 0
+CmdTab.Parent = TabBar
+
+local CmdCorner = Instance.new("UICorner")
+CmdCorner.CornerRadius = UDim.new(0, 8)
+CmdCorner.Parent = CmdTab
 
 -- HOME PAGE
 local HomePage = Instance.new("Frame")
-HomePage.Name = "HomePage"
-HomePage.Size = UDim2.new(1, -20, 1, -140)
-HomePage.Position = UDim2.new(0, 10, 0, 100)
+HomePage.Size = UDim2.new(1, -20, 1, -150)
+HomePage.Position = UDim2.new(0, 10, 0, 110)
 HomePage.BackgroundTransparency = 1
 HomePage.Visible = true
 HomePage.Parent = MainFrame
 
-local CommandBox = Instance.new("TextBox")
-CommandBox.Size = UDim2.new(1, 0, 0, 40)
-CommandBox.Position = UDim2.new(0, 0, 0, 0)
-CommandBox.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-CommandBox.TextColor3 = Color3.fromRGB(255, 255, 255)
-CommandBox.PlaceholderText = "Befehl eingeben... (z.B. speed 100)"
-CommandBox.PlaceholderColor3 = Color3.fromRGB(150, 150, 150)
-CommandBox.Text = ""
-CommandBox.TextSize = 15
-CommandBox.Font = Enum.Font.Gotham
-CommandBox.ClearTextOnFocus = false
-CommandBox.BorderSizePixel = 0
-CommandBox.Parent = HomePage
+local CmdInput = Instance.new("TextBox")
+CmdInput.Size = UDim2.new(1, 0, 0, 45)
+CmdInput.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+CmdInput.TextColor3 = Color3.fromRGB(255, 255, 255)
+CmdInput.PlaceholderText = "Befehl eingeben (z.B. speed 100)"
+CmdInput.PlaceholderColor3 = Color3.fromRGB(150, 150, 150)
+CmdInput.Text = ""
+CmdInput.TextSize = 16
+CmdInput.Font = Enum.Font.Gotham
+CmdInput.BorderSizePixel = 0
+CmdInput.ClearTextOnFocus = false
+CmdInput.Parent = HomePage
 
 local InputCorner = Instance.new("UICorner")
 InputCorner.CornerRadius = UDim.new(0, 8)
-InputCorner.Parent = CommandBox
+InputCorner.Parent = CmdInput
 
-local LogFrame = Instance.new("ScrollingFrame")
-LogFrame.Size = UDim2.new(1, 0, 1, -50)
-LogFrame.Position = UDim2.new(0, 0, 0, 50)
-LogFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
-LogFrame.BorderSizePixel = 0
-LogFrame.ScrollBarThickness = 5
-LogFrame.ScrollBarImageColor3 = Color3.fromRGB(100, 100, 100)
-LogFrame.Parent = HomePage
+local LogScroll = Instance.new("ScrollingFrame")
+LogScroll.Size = UDim2.new(1, 0, 1, -55)
+LogScroll.Position = UDim2.new(0, 0, 0, 55)
+LogScroll.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+LogScroll.BorderSizePixel = 0
+LogScroll.ScrollBarThickness = 6
+LogScroll.Parent = HomePage
 
 local LogCorner = Instance.new("UICorner")
 LogCorner.CornerRadius = UDim.new(0, 8)
-LogCorner.Parent = LogFrame
+LogCorner.Parent = LogScroll
 
 local LogList = Instance.new("UIListLayout")
 LogList.Padding = UDim.new(0, 5)
-LogList.SortOrder = Enum.SortOrder.LayoutOrder
-LogList.Parent = LogFrame
+LogList.Parent = LogScroll
 
 local LogPadding = Instance.new("UIPadding")
-LogPadding.PaddingTop = UDim.new(0, 8)
-LogPadding.PaddingLeft = UDim.new(0, 8)
-LogPadding.PaddingRight = UDim.new(0, 8)
-LogPadding.Parent = LogFrame
+LogPadding.PaddingTop = UDim.new(0, 10)
+LogPadding.PaddingLeft = UDim.new(0, 10)
+LogPadding.PaddingRight = UDim.new(0, 10)
+LogPadding.Parent = LogScroll
 
 -- COMMANDS PAGE
 local CommandsPage = Instance.new("ScrollingFrame")
-CommandsPage.Name = "CommandsPage"
-CommandsPage.Size = UDim2.new(1, -20, 1, -140)
-CommandsPage.Position = UDim2.new(0, 10, 0, 100)
+CommandsPage.Size = UDim2.new(1, -20, 1, -150)
+CommandsPage.Position = UDim2.new(0, 10, 0, 110)
 CommandsPage.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
 CommandsPage.BorderSizePixel = 0
-CommandsPage.ScrollBarThickness = 5
-CommandsPage.ScrollBarImageColor3 = Color3.fromRGB(100, 100, 100)
+CommandsPage.ScrollBarThickness = 6
 CommandsPage.Visible = false
 CommandsPage.Parent = MainFrame
 
-local CmdCorner = Instance.new("UICorner")
-CmdCorner.CornerRadius = UDim.new(0, 8)
-CmdCorner.Parent = CommandsPage
+local CmdPageCorner = Instance.new("UICorner")
+CmdPageCorner.CornerRadius = UDim.new(0, 8)
+CmdPageCorner.Parent = CommandsPage
 
-local CmdList = Instance.new("UIListLayout")
-CmdList.Padding = UDim.new(0, 8)
-CmdList.SortOrder = Enum.SortOrder.LayoutOrder
-CmdList.Parent = CommandsPage
+local CmdPageList = Instance.new("UIListLayout")
+CmdPageList.Padding = UDim.new(0, 10)
+CmdPageList.Parent = CommandsPage
 
-local CmdPadding = Instance.new("UIPadding")
-CmdPadding.PaddingTop = UDim.new(0, 10)
-CmdPadding.PaddingLeft = UDim.new(0, 10)
-CmdPadding.PaddingRight = UDim.new(0, 10)
-CmdPadding.PaddingBottom = UDim.new(0, 10)
-CmdPadding.Parent = CommandsPage
+local CmdPagePadding = Instance.new("UIPadding")
+CmdPagePadding.PaddingTop = UDim.new(0, 10)
+CmdPagePadding.PaddingLeft = UDim.new(0, 10)
+CmdPagePadding.PaddingRight = UDim.new(0, 10)
+CmdPagePadding.PaddingBottom = UDim.new(0, 10)
+CmdPagePadding.Parent = CommandsPage
 
 -- FUNCTIONS
-local function addLog(text, color)
-    local LogLabel = Instance.new("TextLabel")
-    LogLabel.Size = UDim2.new(1, -10, 0, 25)
-    LogLabel.BackgroundTransparency = 1
-    LogLabel.Text = "• " .. text
-    LogLabel.TextColor3 = color or Color3.fromRGB(200, 200, 200)
-    LogLabel.TextSize = 14
-    LogLabel.Font = Enum.Font.Gotham
-    LogLabel.TextXAlignment = Enum.TextXAlignment.Left
-    LogLabel.TextWrapped = true
-    LogLabel.Parent = LogFrame
+local function addLog(msg, color)
+    local Label = Instance.new("TextLabel")
+    Label.Size = UDim2.new(1, -10, 0, 25)
+    Label.BackgroundTransparency = 1
+    Label.Text = "• " .. msg
+    Label.TextColor3 = color or Color3.fromRGB(220, 220, 220)
+    Label.TextSize = 15
+    Label.Font = Enum.Font.Gotham
+    Label.TextXAlignment = Enum.TextXAlignment.Left
+    Label.TextWrapped = true
+    Label.Parent = LogScroll
     
-    LogFrame.CanvasSize = UDim2.new(0, 0, 0, LogList.AbsoluteContentSize.Y + 10)
-    LogFrame.CanvasPosition = Vector2.new(0, LogFrame.CanvasSize.Y.Offset)
+    LogScroll.CanvasSize = UDim2.new(0, 0, 0, LogList.AbsoluteContentSize.Y + 20)
 end
 
-local function createCommandButton(cmdName, cmdDesc, cmdUsage)
-    local CmdButton = Instance.new("Frame")
-    CmdButton.Size = UDim2.new(1, -10, 0, 70)
-    CmdButton.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-    CmdButton.BorderSizePixel = 0
-    CmdButton.Parent = CommandsPage
+local function createCmdBox(name, desc, usage)
+    local Box = Instance.new("Frame")
+    Box.Size = UDim2.new(1, -10, 0, 80)
+    Box.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+    Box.BorderSizePixel = 0
+    Box.Parent = CommandsPage
     
-    local BtnCorner = Instance.new("UICorner")
-    BtnCorner.CornerRadius = UDim.new(0, 8)
-    BtnCorner.Parent = CmdButton
+    local BoxCorner = Instance.new("UICorner")
+    BoxCorner.CornerRadius = UDim.new(0, 8)
+    BoxCorner.Parent = Box
     
-    local NameLabel = Instance.new("TextLabel")
-    NameLabel.Size = UDim2.new(1, -15, 0, 20)
-    NameLabel.Position = UDim2.new(0, 10, 0, 5)
-    NameLabel.BackgroundTransparency = 1
-    NameLabel.Text = "📌 " .. cmdName
-    NameLabel.TextColor3 = Color3.fromRGB(100, 200, 255)
-    NameLabel.TextSize = 16
-    NameLabel.Font = Enum.Font.GothamBold
-    NameLabel.TextXAlignment = Enum.TextXAlignment.Left
-    NameLabel.Parent = CmdButton
+    local NameLbl = Instance.new("TextLabel")
+    NameLbl.Size = UDim2.new(1, -20, 0, 22)
+    NameLbl.Position = UDim2.new(0, 10, 0, 8)
+    NameLbl.BackgroundTransparency = 1
+    NameLbl.Text = "📌 " .. name
+    NameLbl.TextColor3 = Color3.fromRGB(100, 200, 255)
+    NameLbl.TextSize = 17
+    NameLbl.Font = Enum.Font.GothamBold
+    NameLbl.TextXAlignment = Enum.TextXAlignment.Left
+    NameLbl.Parent = Box
     
-    local DescLabel = Instance.new("TextLabel")
-    DescLabel.Size = UDim2.new(1, -15, 0, 18)
-    DescLabel.Position = UDim2.new(0, 10, 0, 27)
-    DescLabel.BackgroundTransparency = 1
-    DescLabel.Text = cmdDesc
-    DescLabel.TextColor3 = Color3.fromRGB(180, 180, 180)
-    DescLabel.TextSize = 13
-    DescLabel.Font = Enum.Font.Gotham
-    DescLabel.TextXAlignment = Enum.TextXAlignment.Left
-    DescLabel.Parent = CmdButton
+    local DescLbl = Instance.new("TextLabel")
+    DescLbl.Size = UDim2.new(1, -20, 0, 20)
+    DescLbl.Position = UDim2.new(0, 10, 0, 32)
+    DescLbl.BackgroundTransparency = 1
+    DescLbl.Text = desc
+    DescLbl.TextColor3 = Color3.fromRGB(190, 190, 190)
+    DescLbl.TextSize = 14
+    DescLbl.Font = Enum.Font.Gotham
+    DescLbl.TextXAlignment = Enum.TextXAlignment.Left
+    DescLbl.Parent = Box
     
-    local UsageLabel = Instance.new("TextLabel")
-    UsageLabel.Size = UDim2.new(1, -15, 0, 18)
-    UsageLabel.Position = UDim2.new(0, 10, 0, 47)
-    UsageLabel.BackgroundTransparency = 1
-    UsageLabel.Text = "💻 " .. cmdUsage
-    UsageLabel.TextColor3 = Color3.fromRGB(120, 120, 120)
-    UsageLabel.TextSize = 12
-    UsageLabel.Font = Enum.Font.GothamMedium
-    UsageLabel.TextXAlignment = Enum.TextXAlignment.Left
-    UsageLabel.Parent = CmdButton
+    local UsageLbl = Instance.new("TextLabel")
+    UsageLbl.Size = UDim2.new(1, -20, 0, 20)
+    UsageLbl.Position = UDim2.new(0, 10, 0, 54)
+    UsageLbl.BackgroundTransparency = 1
+    UsageLbl.Text = "💻 Nutzung: " .. usage
+    UsageLbl.TextColor3 = Color3.fromRGB(130, 130, 130)
+    UsageLbl.TextSize = 13
+    UsageLbl.Font = Enum.Font.Gotham
+    UsageLbl.TextXAlignment = Enum.TextXAlignment.Left
+    UsageLbl.Parent = Box
     
-    CommandsPage.CanvasSize = UDim2.new(0, 0, 0, CmdList.AbsoluteContentSize.Y + 20)
+    CommandsPage.CanvasSize = UDim2.new(0, 0, 0, CmdPageList.AbsoluteContentSize.Y + 20)
 end
+
+-- TOGGLE BUTTON
+local isOpen = false
+
+ToggleButton.MouseButton1Click:Connect(function()
+    isOpen = not isOpen
+    MainFrame.Visible = isOpen
+    
+    if isOpen then
+        ToggleButton.BackgroundColor3 = Color3.fromRGB(100, 220, 100)
+    else
+        ToggleButton.BackgroundColor3 = Color3.fromRGB(60, 60, 220)
+    end
+end)
+
+-- CLOSE BUTTON
+CloseBtn.MouseButton1Click:Connect(function()
+    MainFrame.Visible = false
+    isOpen = false
+    ToggleButton.BackgroundColor3 = Color3.fromRGB(60, 60, 220)
+end)
 
 -- TAB SWITCHING
-local currentTab = "Home"
-
-local function switchTab(tabName)
-    if tabName == "Home" then
-        HomePage.Visible = true
-        CommandsPage.Visible = false
-        HomeTab.BackgroundColor3 = Color3.fromRGB(60, 120, 200)
-        HomeTab.TextColor3 = Color3.fromRGB(255, 255, 255)
-        CommandsTab.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
-        CommandsTab.TextColor3 = Color3.fromRGB(200, 200, 200)
-    elseif tabName == "Commands" then
-        HomePage.Visible = false
-        CommandsPage.Visible = true
-        CommandsTab.BackgroundColor3 = Color3.fromRGB(60, 120, 200)
-        CommandsTab.TextColor3 = Color3.fromRGB(255, 255, 255)
-        HomeTab.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
-        HomeTab.TextColor3 = Color3.fromRGB(200, 200, 200)
-    end
-    currentTab = tabName
-end
-
 HomeTab.MouseButton1Click:Connect(function()
+    HomePage.Visible = true
+    CommandsPage.Visible = false
+    HomeTab.BackgroundColor3 = Color3.fromRGB(60, 120, 220)
+    HomeTab.TextColor3 = Color3.fromRGB(255, 255, 255)
+    CmdTab.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+    CmdTab.TextColor3 = Color3.fromRGB(200, 200, 200)
+end)
+
+CmdTab.MouseButton1Click:Connect(function()
+    HomePage.Visible = false
+    CommandsPage.Visible = true
+    CmdTab.BackgroundColor3 = Color3.fromRGB(60, 120, 220)
+    CmdTab.TextColor3 = Color3.fromRGB(255, 255, 255)
+    HomeTab.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+    HomeTab.TextColor3 = Color3.fromRGB(200, 200, 200)
+end)
+
+-- COMMANDS
+local Commands = {}
+local
