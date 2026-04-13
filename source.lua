@@ -1,55 +1,121 @@
--- ROX ADMIN SCRIPT v1.0
--- by Lisa-RoxerionDev
+-- ROX ADMIN v2.0
+-- Runder Toggle-Button Style
 
 local Players = game:GetService("Players")
 local UserInputService = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
+local TweenService = game:GetService("TweenService")
 local LocalPlayer = Players.LocalPlayer
 
--- Willkommens-Notification
+-- Notification
 game.StarterGui:SetCore("SendNotification", {
     Title = "Rox Admin";
-    Text = "Willkommen " .. LocalPlayer.Name .. "!";
+    Text = "Geladen! Klicke den runden Button";
     Duration = 5;
 })
 
--- GUI erstellen
+-- ScreenGui
 local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Name = "RoxAdminGUI"
 ScreenGui.ResetOnSpawn = false
+ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 ScreenGui.Parent = game.CoreGui
 
--- Haupt-Frame
+-- ====================================
+-- RUNDER TOGGLE BUTTON
+-- ====================================
+
+local ToggleButton = Instance.new("ImageButton")
+ToggleButton.Name = "ToggleButton"
+ToggleButton.Size = UDim2.new(0, 60, 0, 60)
+ToggleButton.Position = UDim2.new(0, 20, 0.5, -30)
+ToggleButton.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+ToggleButton.BorderSizePixel = 0
+ToggleButton.Image = ""
+ToggleButton.Active = true
+ToggleButton.Draggable = true
+ToggleButton.Parent = ScreenGui
+
+-- Rund machen
+local ButtonCorner = Instance.new("UICorner")
+ButtonCorner.CornerRadius = UDim.new(1, 0)
+ButtonCorner.Parent = ToggleButton
+
+-- Gradient für coolen Effekt
+local Gradient = Instance.new("UIGradient")
+Gradient.Color = ColorSequence.new{
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(100, 50, 200)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(50, 150, 255))
+}
+Gradient.Rotation = 45
+Gradient.Parent = ToggleButton
+
+-- Text in Button
+local ButtonText = Instance.new("TextLabel")
+ButtonText.Size = UDim2.new(1, 0, 1, 0)
+ButtonText.BackgroundTransparency = 1
+ButtonText.Text = "ROX"
+ButtonText.TextColor3 = Color3.fromRGB(255, 255, 255)
+ButtonText.TextSize = 16
+ButtonText.Font = Enum.Font.GothamBold
+ButtonText.Parent = ToggleButton
+
+-- Stroke für bessere Sichtbarkeit
+local Stroke = Instance.new("UIStroke")
+Stroke.Color = Color3.fromRGB(255, 255, 255)
+Stroke.Thickness = 2
+Stroke.Transparency = 0.5
+Stroke.Parent = ToggleButton
+
+-- ====================================
+-- HAUPT-GUI (versteckt am Anfang)
+-- ====================================
+
 local MainFrame = Instance.new("Frame")
 MainFrame.Name = "MainFrame"
-MainFrame.Size = UDim2.new(0, 500, 0, 350)
-MainFrame.Position = UDim2.new(0.5, -250, 0.5, -175)
-MainFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+MainFrame.Size = UDim2.new(0, 550, 0, 400)
+MainFrame.Position = UDim2.new(0.5, -275, 0.5, -200)
+MainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 MainFrame.BorderSizePixel = 0
+MainFrame.Visible = false
 MainFrame.Active = true
-MainFrame.Draggable = true
 MainFrame.Parent = ScreenGui
 
--- Runde Ecken
-local Corner = Instance.new("UICorner")
-Corner.CornerRadius = UDim.new(0, 10)
-Corner.Parent = MainFrame
+local MainCorner = Instance.new("UICorner")
+MainCorner.CornerRadius = UDim.new(0, 12)
+MainCorner.Parent = MainFrame
 
--- Titel-Bar
+local MainStroke = Instance.new("UIStroke")
+MainStroke.Color = Color3.fromRGB(70, 70, 70)
+MainStroke.Thickness = 2
+MainStroke.Parent = MainFrame
+
+-- ====================================
+-- TITLE BAR
+-- ====================================
+
 local TitleBar = Instance.new("Frame")
-TitleBar.Size = UDim2.new(1, 0, 0, 40)
-TitleBar.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+TitleBar.Size = UDim2.new(1, 0, 0, 45)
+TitleBar.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
 TitleBar.BorderSizePixel = 0
 TitleBar.Parent = MainFrame
 
 local TitleCorner = Instance.new("UICorner")
-TitleCorner.CornerRadius = UDim.new(0, 10)
+TitleCorner.CornerRadius = UDim.new(0, 12)
 TitleCorner.Parent = TitleBar
 
--- Titel-Text
+-- Fix für untere Ecken
+local TitleFix = Instance.new("Frame")
+TitleFix.Size = UDim2.new(1, 0, 0, 12)
+TitleFix.Position = UDim2.new(0, 0, 1, -12)
+TitleFix.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+TitleFix.BorderSizePixel = 0
+TitleFix.Parent = TitleBar
+
+-- Title Text
 local Title = Instance.new("TextLabel")
 Title.Size = UDim2.new(1, -100, 1, 0)
-Title.Position = UDim2.new(0, 10, 0, 0)
+Title.Position = UDim2.new(0, 15, 0, 0)
 Title.BackgroundTransparency = 1
 Title.Text = "🔧 ROX ADMIN"
 Title.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -60,267 +126,217 @@ Title.Parent = TitleBar
 
 -- Close Button
 local CloseBtn = Instance.new("TextButton")
-CloseBtn.Size = UDim2.new(0, 30, 0, 30)
-CloseBtn.Position = UDim2.new(1, -35, 0, 5)
-CloseBtn.BackgroundColor3 = Color3.fromRGB(255, 50, 50)
-CloseBtn.Text = "X"
+CloseBtn.Size = UDim2.new(0, 35, 0, 35)
+CloseBtn.Position = UDim2.new(1, -40, 0, 5)
+CloseBtn.BackgroundColor3 = Color3.fromRGB(255, 60, 60)
+CloseBtn.Text = "✕"
 CloseBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-CloseBtn.TextSize = 18
+CloseBtn.TextSize = 20
 CloseBtn.Font = Enum.Font.GothamBold
+CloseBtn.BorderSizePixel = 0
 CloseBtn.Parent = TitleBar
 
 local CloseCorner = Instance.new("UICorner")
-CloseCorner.CornerRadius = UDim.new(0, 5)
+CloseCorner.CornerRadius = UDim.new(1, 0)
 CloseCorner.Parent = CloseBtn
 
-CloseBtn.MouseButton1Click:Connect(function()
-    ScreenGui:Destroy()
-end)
+-- ====================================
+-- TAB BUTTONS (Home & Commands)
+-- ====================================
+
+local TabContainer = Instance.new("Frame")
+TabContainer.Size = UDim2.new(1, -20, 0, 35)
+TabContainer.Position = UDim2.new(0, 10, 0, 55)
+TabContainer.BackgroundTransparency = 1
+TabContainer.Parent = MainFrame
+
+local function createTab(name, position)
+    local Tab = Instance.new("TextButton")
+    Tab.Size = UDim2.new(0.48, 0, 1, 0)
+    Tab.Position = UDim2.new(position, 0, 0, 0)
+    Tab.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+    Tab.Text = name
+    Tab.TextColor3 = Color3.fromRGB(200, 200, 200)
+    Tab.TextSize = 16
+    Tab.Font = Enum.Font.GothamSemibold
+    Tab.BorderSizePixel = 0
+    Tab.Parent = TabContainer
+    
+    local Corner = Instance.new("UICorner")
+    Corner.CornerRadius = UDim.new(0, 8)
+    Corner.Parent = Tab
+    
+    return Tab
+end
+
+local HomeTab = createTab("🏠 Home", 0)
+local CommandsTab = createTab("📋 Commands", 0.52)
+
+-- ====================================
+-- HOME PAGE
+-- ====================================
+
+local HomePage = Instance.new("Frame")
+HomePage.Name = "HomePage"
+HomePage.Size = UDim2.new(1, -20, 1, -140)
+HomePage.Position = UDim2.new(0, 10, 0, 100)
+HomePage.BackgroundTransparency = 1
+HomePage.Visible = true
+HomePage.Parent = MainFrame
 
 -- Command Input
 local CommandBox = Instance.new("TextBox")
-CommandBox.Size = UDim2.new(1, -20, 0, 35)
-CommandBox.Position = UDim2.new(0, 10, 1, -45)
-CommandBox.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+CommandBox.Size = UDim2.new(1, 0, 0, 40)
+CommandBox.Position = UDim2.new(0, 0, 0, 0)
+CommandBox.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
 CommandBox.TextColor3 = Color3.fromRGB(255, 255, 255)
-CommandBox.PlaceholderText = "Befehl eingeben (z.B. speed 100)..."
+CommandBox.PlaceholderText = "Befehl eingeben... (z.B. speed 100)"
+CommandBox.PlaceholderColor3 = Color3.fromRGB(150, 150, 150)
 CommandBox.Text = ""
-CommandBox.TextSize = 14
+CommandBox.TextSize = 15
 CommandBox.Font = Enum.Font.Gotham
 CommandBox.ClearTextOnFocus = false
-CommandBox.Parent = MainFrame
+CommandBox.BorderSizePixel = 0
+CommandBox.Parent = HomePage
 
-local BoxCorner = Instance.new("UICorner")
-BoxCorner.CornerRadius = UDim.new(0, 5)
-BoxCorner.Parent = CommandBox
+local InputCorner = Instance.new("UICorner")
+InputCorner.CornerRadius = UDim.new(0, 8)
+InputCorner.Parent = CommandBox
 
--- Output/Log Frame
+-- Output/Log
 local LogFrame = Instance.new("ScrollingFrame")
-LogFrame.Size = UDim2.new(1, -20, 1, -100)
-LogFrame.Position = UDim2.new(0, 10, 0, 50)
-LogFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+LogFrame.Size = UDim2.new(1, 0, 1, -50)
+LogFrame.Position = UDim2.new(0, 0, 0, 50)
+LogFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
 LogFrame.BorderSizePixel = 0
-LogFrame.ScrollBarThickness = 6
-LogFrame.Parent = MainFrame
+LogFrame.ScrollBarThickness = 5
+LogFrame.ScrollBarImageColor3 = Color3.fromRGB(100, 100, 100)
+LogFrame.Parent = HomePage
 
 local LogCorner = Instance.new("UICorner")
-LogCorner.CornerRadius = UDim.new(0, 5)
+LogCorner.CornerRadius = UDim.new(0, 8)
 LogCorner.Parent = LogFrame
 
 local LogList = Instance.new("UIListLayout")
 LogList.Padding = UDim.new(0, 5)
+LogList.SortOrder = Enum.SortOrder.LayoutOrder
 LogList.Parent = LogFrame
 
--- Log Funktion
+local LogPadding = Instance.new("UIPadding")
+LogPadding.PaddingTop = UDim.new(0, 8)
+LogPadding.PaddingLeft = UDim.new(0, 8)
+LogPadding.PaddingRight = UDim.new(0, 8)
+LogPadding.Parent = LogFrame
+
+-- ====================================
+-- COMMANDS PAGE
+-- ====================================
+
+local CommandsPage = Instance.new("ScrollingFrame")
+CommandsPage.Name = "CommandsPage"
+CommandsPage.Size = UDim2.new(1, -20, 1, -140)
+CommandsPage.Position = UDim2.new(0, 10, 0, 100)
+CommandsPage.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+CommandsPage.BorderSizePixel = 0
+CommandsPage.ScrollBarThickness = 5
+CommandsPage.ScrollBarImageColor3 = Color3.fromRGB(100, 100, 100)
+CommandsPage.Visible = false
+CommandsPage.Parent = MainFrame
+
+local CmdCorner = Instance.new("UICorner")
+CmdCorner.CornerRadius = UDim.new(0, 8)
+CmdCorner.Parent = CommandsPage
+
+local CmdList = Instance.new("UIListLayout")
+CmdList.Padding = UDim.new(0, 8)
+CmdList.SortOrder = Enum.SortOrder.LayoutOrder
+CmdList.Parent = CommandsPage
+
+local CmdPadding = Instance.new("UIPadding")
+CmdPadding.PaddingTop = UDim.new(0, 10)
+CmdPadding.PaddingLeft = UDim.new(0, 10)
+CmdPadding.PaddingRight = UDim.new(0, 10)
+CmdPadding.PaddingBottom = UDim.new(0, 10)
+CmdPadding.Parent = CommandsPage
+
+-- ====================================
+-- FUNCTIONS
+-- ====================================
+
+-- Log hinzufügen
 local function addLog(text, color)
     local LogLabel = Instance.new("TextLabel")
-    LogLabel.Size = UDim2.new(1, -10, 0, 20)
+    LogLabel.Size = UDim2.new(1, -10, 0, 25)
     LogLabel.BackgroundTransparency = 1
     LogLabel.Text = "• " .. text
     LogLabel.TextColor3 = color or Color3.fromRGB(200, 200, 200)
-    LogLabel.TextSize = 13
+    LogLabel.TextSize = 14
     LogLabel.Font = Enum.Font.Gotham
     LogLabel.TextXAlignment = Enum.TextXAlignment.Left
+    LogLabel.TextWrapped = true
     LogLabel.Parent = LogFrame
     
-    LogFrame.CanvasSize = UDim2.new(0, 0, 0, LogList.AbsoluteContentSize.Y)
+    LogFrame.CanvasSize = UDim2.new(0, 0, 0, LogList.AbsoluteContentSize.Y + 10)
+    LogFrame.CanvasPosition = Vector2.new(0, LogFrame.CanvasSize.Y.Offset)
 end
 
--- Commands System
-local Commands = {}
-local Loops = {}
-
--- Speed Command
-Commands.speed = function(args)
-    local speed = tonumber(args[1]) or 16
-    if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
-        LocalPlayer.Character.Humanoid.WalkSpeed = speed
-        addLog("Speed auf " .. speed .. " gesetzt", Color3.fromRGB(0, 255, 0))
-    else
-        addLog("Fehler: Character nicht gefunden", Color3.fromRGB(255, 0, 0))
-    end
-end
-
--- Jump Command
-Commands.jump = function(args)
-    local power = tonumber(args[1]) or 50
-    if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
-        LocalPlayer.Character.Humanoid.JumpPower = power
-        addLog("Jump Power auf " .. power .. " gesetzt", Color3.fromRGB(0, 255, 0))
-    else
-        addLog("Fehler: Character nicht gefunden", Color3.fromRGB(255, 0, 0))
-    end
-end
-
--- God Mode Command
-Commands.god = function(args)
-    if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
-        LocalPlayer.Character.Humanoid.MaxHealth = math.huge
-        LocalPlayer.Character.Humanoid.Health = math.huge
-        addLog("God Mode aktiviert", Color3.fromRGB(0, 255, 0))
-    else
-        addLog("Fehler: Character nicht gefunden", Color3.fromRGB(255, 0, 0))
-    end
-end
-
--- Teleport Command
-Commands.tp = function(args)
-    local targetName = args[1]
-    if not targetName then
-        addLog("Fehler: Spielername fehlt", Color3.fromRGB(255, 0, 0))
-        return
-    end
+-- Command Button erstellen
+local function createCommandButton(cmdName, cmdDesc, cmdUsage)
+    local CmdButton = Instance.new("Frame")
+    CmdButton.Size = UDim2.new(1, -10, 0, 70)
+    CmdButton.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+    CmdButton.BorderSizePixel = 0
+    CmdButton.Parent = CommandsPage
     
-    local target = nil
-    for _, player in ipairs(Players:GetPlayers()) do
-        if player.Name:lower():sub(1, #targetName) == targetName:lower() then
-            target = player
-            break
-        end
-    end
+    local BtnCorner = Instance.new("UICorner")
+    BtnCorner.CornerRadius = UDim.new(0, 8)
+    BtnCorner.Parent = CmdButton
     
-    if target and target.Character and target.Character:FindFirstChild("HumanoidRootPart") then
-        if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
-            LocalPlayer.Character.HumanoidRootPart.CFrame = target.Character.HumanoidRootPart.CFrame
-            addLog("Zu " .. target.Name .. " teleportiert", Color3.fromRGB(0, 255, 0))
-        end
-    else
-        addLog("Fehler: Spieler nicht gefunden", Color3.fromRGB(255, 0, 0))
-    end
-end
-
--- Fly Command
-Commands.fly = function(args)
-    if Loops.flying then
-        addLog("Fly bereits aktiv", Color3.fromRGB(255, 255, 0))
-        return
-    end
+    local NameLabel = Instance.new("TextLabel")
+    NameLabel.Size = UDim2.new(1, -15, 0, 20)
+    NameLabel.Position = UDim2.new(0, 10, 0, 5)
+    NameLabel.BackgroundTransparency = 1
+    NameLabel.Text = "📌 " .. cmdName
+    NameLabel.TextColor3 = Color3.fromRGB(100, 200, 255)
+    NameLabel.TextSize = 16
+    NameLabel.Font = Enum.Font.GothamBold
+    NameLabel.TextXAlignment = Enum.TextXAlignment.Left
+    NameLabel.Parent = CmdButton
     
-    local speed = tonumber(args[1]) or 50
+    local DescLabel = Instance.new("TextLabel")
+    DescLabel.Size = UDim2.new(1, -15, 0, 18)
+    DescLabel.Position = UDim2.new(0, 10, 0, 27)
+    DescLabel.BackgroundTransparency = 1
+    DescLabel.Text = cmdDesc
+    DescLabel.TextColor3 = Color3.fromRGB(180, 180, 180)
+    DescLabel.TextSize = 13
+    DescLabel.Font = Enum.Font.Gotham
+    DescLabel.TextXAlignment = Enum.TextXAlignment.Left
+    DescLabel.Parent = CmdButton
     
-    Loops.flying = RunService.Heartbeat:Connect(function()
-        if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
-            local hrp = LocalPlayer.Character.HumanoidRootPart
-            local cam = workspace.CurrentCamera
-            
-            hrp.Velocity = Vector3.new(0, 0, 0)
-            
-            local movement = Vector3.new(0, 0, 0)
-            
-            if UserInputService:IsKeyDown(Enum.KeyCode.W) then
-                movement = movement + (cam.CFrame.LookVector * speed)
-            end
-            if UserInputService:IsKeyDown(Enum.KeyCode.S) then
-                movement = movement - (cam.CFrame.LookVector * speed)
-            end
-            if UserInputService:IsKeyDown(Enum.KeyCode.A) then
-                movement = movement - (cam.CFrame.RightVector * speed)
-            end
-            if UserInputService:IsKeyDown(Enum.KeyCode.D) then
-                movement = movement + (cam.CFrame.RightVector * speed)
-            end
-            if UserInputService:IsKeyDown(Enum.KeyCode.Space) then
-                movement = movement + Vector3.new(0, speed, 0)
-            end
-            if UserInputService:IsKeyDown(Enum.KeyCode.LeftShift) then
-                movement = movement - Vector3.new(0, speed, 0)
-            end
-            
-            hrp.CFrame = hrp.CFrame + movement * 0.1
-        end
-    end)
+    local UsageLabel = Instance.new("TextLabel")
+    UsageLabel.Size = UDim2.new(1, -15, 0, 18)
+    UsageLabel.Position = UDim2.new(0, 10, 0, 47)
+    UsageLabel.BackgroundTransparency = 1
+    UsageLabel.Text = "💻 " .. cmdUsage
+    UsageLabel.TextColor3 = Color3.fromRGB(120, 120, 120)
+    UsageLabel.TextSize = 12
+    UsageLabel.Font = Enum.Font.GothamMedium
+    UsageLabel.TextXAlignment = Enum.TextXAlignment.Left
+    UsageLabel.Parent = CmdButton
     
-    addLog("Fly aktiviert (Speed: " .. speed .. ")", Color3.fromRGB(0, 255, 0))
+    CommandsPage.CanvasSize = UDim2.new(0, 0, 0, CmdList.AbsoluteContentSize.Y + 20)
 end
 
--- Unfly Command
-Commands.unfly = function(args)
-    if Loops.flying then
-        Loops.flying:Disconnect()
-        Loops.flying = nil
-        addLog("Fly deaktiviert", Color3.fromRGB(0, 255, 0))
-    else
-        addLog("Fly ist nicht aktiv", Color3.fromRGB(255, 255, 0))
-    end
-end
+-- ====================================
+-- TAB SWITCHING
+-- ====================================
 
--- NoClip Command
-Commands.noclip = function(args)
-    if Loops.noclip then
-        addLog("NoClip bereits aktiv", Color3.fromRGB(255, 255, 0))
-        return
-    end
-    
-    Loops.noclip = RunService.Stepped:Connect(function()
-        if LocalPlayer.Character then
-            for _, part in ipairs(LocalPlayer.Character:GetDescendants()) do
-                if part:IsA("BasePart") then
-                    part.CanCollide = false
-                end
-            end
-        end
-    end)
-    
-    addLog("NoClip aktiviert", Color3.fromRGB(0, 255, 0))
-end
+local currentTab = "Home"
 
--- Clip Command
-Commands.clip = function(args)
-    if Loops.noclip then
-        Loops.noclip:Disconnect()
-        Loops.noclip = nil
-        addLog("NoClip deaktiviert", Color3.fromRGB(0, 255, 0))
-    else
-        addLog("NoClip ist nicht aktiv", Color3.fromRGB(255, 255, 0))
-    end
-end
-
--- Reset Command
-Commands.reset = function(args)
-    if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
-        LocalPlayer.Character.Humanoid.Health = 0
-        addLog("Character resettet", Color3.fromRGB(0, 255, 0))
-    end
-end
-
--- Help Command
-Commands.help = function(args)
-    addLog("=== ROX ADMIN BEFEHLE ===", Color3.fromRGB(255, 255, 0))
-    addLog("speed [zahl] - Ändert Geschwindigkeit", Color3.fromRGB(150, 150, 255))
-    addLog("jump [zahl] - Ändert Jump Power", Color3.fromRGB(150, 150, 255))
-    addLog("god - God Mode", Color3.fromRGB(150, 150, 255))
-    addLog("tp [spieler] - Teleportiere zu Spieler", Color3.fromRGB(150, 150, 255))
-    addLog("fly [speed] - Aktiviert Fly", Color3.fromRGB(150, 150, 255))
-    addLog("unfly - Deaktiviert Fly", Color3.fromRGB(150, 150, 255))
-    addLog("noclip - Aktiviert NoClip", Color3.fromRGB(150, 150, 255))
-    addLog("clip - Deaktiviert NoClip", Color3.fromRGB(150, 150, 255))
-    addLog("reset - Resettet Character", Color3.fromRGB(150, 150, 255))
-end
-
--- Command Parser
-local function executeCommand(input)
-    local parts = string.split(input, " ")
-    local cmd = parts[1]:lower()
-    table.remove(parts, 1)
-    
-    if Commands[cmd] then
-        Commands[cmd](parts)
-    else
-        addLog("Unbekannter Befehl: " .. cmd, Color3.fromRGB(255, 0, 0))
-        addLog("Nutze 'help' für alle Befehle", Color3.fromRGB(255, 255, 0))
-    end
-end
-
--- Input Handler
-CommandBox.FocusLost:Connect(function(enterPressed)
-    if enterPressed and CommandBox.Text ~= "" then
-        executeCommand(CommandBox.Text)
-        CommandBox.Text = ""
-    end
-end)
-
--- Willkommens-Nachricht
-addLog("Rox Admin geladen!", Color3.fromRGB(0, 255, 255))
-addLog("Nutze 'help' für alle Befehle", Color3.fromRGB(255, 255, 0))
-
-print("Rox Admin v1.0 erfolgreich geladen!")
+local function switchTab(tabName)
+    if tabName == "Home" then
+        HomePage.Visible = true
+        CommandsPage.Visible = false
+        HomeTab.BackgroundColor3 = Color3.fromRGB(60, 120, 200)
+        HomeTab.
